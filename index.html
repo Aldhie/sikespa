@@ -6,674 +6,605 @@
 <title>SIKESPA — Sistem Informasi Kesehatan Papua</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/dashboard.css">
 <link rel="stylesheet" href="css/components.css">
 <style>
-/* ============================================================
+/* ── Override font to Inter ─────────────────────────── */
+:root,[data-theme="light"],[data-theme="dark"]{
+  --font-body:'Inter','Segoe UI',sans-serif;
+  --font-display:'Inter','Segoe UI',sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code',monospace;
+}
+
+/* ── Fix body overflow for login page ──────────────── */
+body { overflow: auto; }
+
+/* ════════════════════════════════════════════════════
    LOGIN PAGE
-   ============================================================ */
-#page-login {
-  display: none;
-  min-height: 100dvh;
-  width: 100%;
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: var(--bg);
-  overflow: hidden;
+   ════════════════════════════════════════════════════ */
+#page-login{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  background:var(--bg);
 }
-#page-login.active { display: flex; }
+#page-login.active{ display:block; }
 
-/* Split layout */
-.login-split {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  width: 100%;
-  min-height: 100dvh;
+.lp-wrap{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:100dvh;
+  width:100%;
 }
 
-/* Left panel — branding */
-.login-brand {
-  position: relative;
-  background: linear-gradient(145deg, #0d9488 0%, #0c6863 45%, #064e49 100%);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 3rem;
-  overflow: hidden;
-  color: white;
+/* ── Left brand panel ───────────────────────────────── */
+.lp-brand{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:2.5rem;
+  background:linear-gradient(150deg,#0d9488 0%,#0a7c74 40%,#065f5a 100%);
+  overflow:hidden;
+  color:#fff;
+}
+.lp-brand::before{
+  content:'';
+  position:absolute;
+  width:400px;height:400px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.06);
+  top:-120px;right:-100px;
+  pointer-events:none;
+}
+.lp-brand::after{
+  content:'';
+  position:absolute;
+  width:280px;height:280px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.04);
+  bottom:-60px;left:-60px;
+  pointer-events:none;
 }
 
-/* decorative blobs */
-.login-brand::before {
-  content: '';
-  position: absolute;
-  width: 420px; height: 420px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.05);
-  top: -120px; right: -120px;
-  pointer-events: none;
-}
-.login-brand::after {
-  content: '';
-  position: absolute;
-  width: 300px; height: 300px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.04);
-  bottom: -80px; left: -60px;
-  pointer-events: none;
+.lp-brand-top{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  position:relative;z-index:1;
+  animation:lp-down .6s cubic-bezier(.16,1,.3,1) both;
 }
 
-.brand-top {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: relative;
-  z-index: 1;
-  animation: fadeSlideDown 0.7s cubic-bezier(0.16,1,0.3,1) both;
+.lp-logos{
+  display:flex;
+  align-items:center;
+  gap:.75rem;
 }
 
-.brand-logos {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+/* Kemenkes logo — inline SVG wrapper */
+.lp-kemenkes{
+  width:48px;height:48px;
+  background:rgba(255,255,255,.15);
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
 }
 
-.brand-logo-img {
-  width: 48px;
-  height: 48px;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-  flex-shrink: 0;
+.lp-div{
+  width:1px;height:36px;
+  background:rgba(255,255,255,.25);
 }
 
-.brand-logo-divider {
-  width: 1px;
-  height: 36px;
-  background: rgba(255,255,255,0.3);
+/* SIKESPA monogram */
+.lp-monogram{
+  width:48px;height:48px;
+  background:rgba(255,255,255,.15);
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
 }
 
-.brand-wordmark {
-  display: flex;
-  flex-direction: column;
+.lp-wordmark{
+  display:flex;
+  flex-direction:column;
+  line-height:1;
+}
+.lp-wordmark-name{
+  font-size:1.2rem;
+  font-weight:800;
+  letter-spacing:-.02em;
+}
+.lp-wordmark-sub{
+  font-size:.65rem;
+  opacity:.7;
+  font-weight:500;
+  margin-top:3px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
 }
 
-.brand-wordmark-name {
-  font-size: 1.25rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1;
+.lp-brand-mid{
+  position:relative;z-index:1;
+  animation:lp-up .7s .1s cubic-bezier(.16,1,.3,1) both;
+}
+.lp-brand-mid h1{
+  font-size:clamp(1.75rem,2.8vw,2.5rem);
+  font-weight:800;
+  line-height:1.15;
+  letter-spacing:-.03em;
+  margin-bottom:.9rem;
+}
+.lp-brand-mid p{
+  font-size:.9rem;
+  opacity:.8;
+  line-height:1.7;
+  max-width:360px;
 }
 
-.brand-wordmark-sub {
-  font-size: 0.7rem;
-  opacity: 0.75;
-  font-weight: 500;
-  margin-top: 2px;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
+.lp-stats{
+  display:flex;
+  gap:2rem;
+  margin-top:2rem;
+}
+.lp-stat-val{
+  display:block;
+  font-size:1.7rem;
+  font-weight:800;
+  line-height:1;
+}
+.lp-stat-lbl{
+  display:block;
+  font-size:.65rem;
+  opacity:.65;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  margin-top:3px;
 }
 
-.brand-center {
-  position: relative;
-  z-index: 1;
-  animation: fadeSlideUp 0.8s 0.15s cubic-bezier(0.16,1,0.3,1) both;
+.lp-brand-bot{
+  position:relative;z-index:1;
+  font-size:.7rem;
+  opacity:.5;
+  animation:lp-up .7s .2s cubic-bezier(.16,1,.3,1) both;
 }
 
-.brand-headline {
-  font-size: clamp(1.8rem, 3vw, 2.6rem);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.03em;
-  margin-bottom: 1rem;
+/* ── Right form panel ───────────────────────────────── */
+.lp-form-panel{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:3rem 2.5rem;
+  background:var(--surface);
+  position:relative;
 }
 
-.brand-desc {
-  font-size: 0.95rem;
-  opacity: 0.8;
-  line-height: 1.7;
-  max-width: 380px;
+.lp-theme-btn{
+  position:absolute;
+  top:1.25rem;
+  right:1.25rem;
+  width:36px;height:36px;
+  border-radius:var(--radius-lg);
+  border:1px solid var(--border);
+  background:var(--surface-2);
+  color:var(--text-muted);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:background var(--transition),color var(--transition);
+}
+.lp-theme-btn:hover{background:var(--surface-offset);color:var(--text);}
+
+.lp-inner{
+  width:100%;
+  max-width:400px;
+  animation:lp-up .65s .1s cubic-bezier(.16,1,.3,1) both;
 }
 
-.brand-stats {
-  display: flex;
-  gap: 2rem;
-  margin-top: 2.5rem;
+.lp-inner h2{
+  font-size:1.6rem;
+  font-weight:800;
+  color:var(--text);
+  letter-spacing:-.03em;
+  margin-bottom:.35rem;
+}
+.lp-inner .lp-sub{
+  font-size:.875rem;
+  color:var(--text-muted);
+  margin-bottom:1.75rem;
 }
 
-.brand-stat-val {
-  font-size: 1.75rem;
-  font-weight: 800;
-  line-height: 1;
-  display: block;
+/* Error banner */
+.lp-err{
+  display:none;
+  align-items:center;
+  gap:.5rem;
+  padding:.75rem 1rem;
+  background:var(--danger-light);
+  border:1px solid rgba(220,38,38,.18);
+  border-radius:var(--radius-lg);
+  color:var(--danger);
+  font-size:.8rem;
+  font-weight:500;
+  margin-bottom:1.25rem;
+}
+.lp-err.show{
+  display:flex;
+  animation:lp-shake .4s cubic-bezier(.36,.07,.19,.97) both;
 }
 
-.brand-stat-label {
-  font-size: 0.72rem;
-  opacity: 0.7;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  display: block;
-  margin-top: 3px;
+/* Field */
+.lp-field{
+  margin-bottom:1.2rem;
+}
+.lp-label{
+  display:block;
+  font-size:.78rem;
+  font-weight:600;
+  color:var(--text);
+  margin-bottom:.4rem;
+  letter-spacing:.01em;
+}
+.lp-input-wrap{
+  position:relative;
+}
+.lp-input{
+  width:100%;
+  padding:.75rem 1rem .75rem 2.75rem;
+  border:1.5px solid var(--border);
+  border-radius:var(--radius-lg);
+  background:var(--bg);
+  color:var(--text);
+  font-size:.9375rem;
+  font-family:var(--font-body);
+  outline:none;
+  transition:border-color var(--transition),box-shadow var(--transition),background var(--transition);
+}
+.lp-input:focus{
+  border-color:var(--primary);
+  background:var(--surface);
+  box-shadow:0 0 0 3px var(--primary-glow);
+}
+.lp-input.err{
+  border-color:var(--danger);
+  box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+.lp-icon{
+  position:absolute;
+  left:.85rem;
+  top:50%;transform:translateY(-50%);
+  color:var(--text-faint);
+  pointer-events:none;
+  transition:color var(--transition);
+  display:flex;
+}
+.lp-input:focus~.lp-icon{color:var(--primary);}
+.lp-pw-btn{
+  position:absolute;
+  right:.7rem;
+  top:50%;transform:translateY(-50%);
+  color:var(--text-faint);
+  background:none;border:none;cursor:pointer;
+  padding:4px;
+  border-radius:var(--radius-sm);
+  display:flex;align-items:center;
+  transition:color var(--transition);
+}
+.lp-pw-btn:hover{color:var(--text-muted);}
+
+/* Remember / forgot */
+.lp-opts{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:1.5rem;
+}
+.lp-remember{
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  cursor:pointer;
+  font-size:.8rem;
+  color:var(--text-muted);
+  user-select:none;
+}
+.lp-chk{
+  width:16px;height:16px;
+  border-radius:4px;
+  border:1.5px solid var(--border);
+  appearance:none;
+  cursor:pointer;
+  background:var(--bg);
+  position:relative;
+  flex-shrink:0;
+  transition:all var(--transition);
+}
+.lp-chk:checked{
+  background:var(--primary);
+  border-color:var(--primary);
+}
+.lp-chk:checked::after{
+  content:'';
+  position:absolute;
+  left:3px;top:1px;
+  width:8px;height:5px;
+  border-left:2px solid #fff;
+  border-bottom:2px solid #fff;
+  transform:rotate(-45deg);
+}
+.lp-forgot{
+  font-size:.8rem;
+  color:var(--primary);
+  font-weight:500;
+  cursor:pointer;
+  transition:opacity var(--transition);
+}
+.lp-forgot:hover{opacity:.7;}
+
+/* Submit */
+.lp-btn{
+  width:100%;
+  padding:.85rem 1.5rem;
+  background:var(--primary);
+  color:#fff;
+  border:none;
+  border-radius:var(--radius-lg);
+  font-size:.9375rem;
+  font-weight:700;
+  font-family:var(--font-body);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.6rem;
+  box-shadow:0 2px 10px var(--primary-glow);
+  transition:background var(--transition),transform 80ms ease,box-shadow var(--transition);
+}
+.lp-btn:hover{background:var(--primary-hover);transform:translateY(-1px);box-shadow:0 4px 16px var(--primary-glow);}
+.lp-btn:active{transform:translateY(0);}
+.lp-btn:disabled{opacity:.65;cursor:not-allowed;transform:none;}
+.lp-spinner{
+  display:none;
+  width:18px;height:18px;
+  border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:lp-spin .7s linear infinite;
+}
+.lp-btn.loading .lp-btn-txt{opacity:.5;}
+.lp-btn.loading .lp-spinner{display:block;}
+
+/* Hint */
+.lp-hint{
+  margin-top:1.5rem;
+  padding:.8rem 1rem;
+  background:var(--surface-2);
+  border:1px solid var(--divider);
+  border-radius:var(--radius-md);
+  font-size:.75rem;
+  color:var(--text-muted);
+  line-height:1.65;
+}
+.lp-hint code{
+  font-family:var(--font-mono);
+  font-size:.78rem;
+  color:var(--text);
+  background:var(--surface-offset);
+  padding:1px 5px;
+  border-radius:3px;
 }
 
-.brand-bottom {
-  position: relative;
-  z-index: 1;
-  font-size: 0.72rem;
-  opacity: 0.55;
-  animation: fadeSlideUp 0.8s 0.25s cubic-bezier(0.16,1,0.3,1) both;
+/* Success overlay */
+#lp-success{
+  position:fixed;
+  inset:0;
+  background:var(--primary);
+  z-index:99999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s ease;
 }
-
-/* Right panel — form */
-.login-form-panel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem 2.5rem;
-  background: var(--surface);
-  position: relative;
-}
-
-.login-form-inner {
-  width: 100%;
-  max-width: 400px;
-  animation: fadeSlideUp 0.7s 0.1s cubic-bezier(0.16,1,0.3,1) both;
-}
-
-.login-form-title {
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: var(--text);
-  letter-spacing: -0.03em;
-  margin-bottom: 0.4rem;
-}
-
-.login-form-sub {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  margin-bottom: 2rem;
-}
-
-/* Form fields */
-.login-field {
-  margin-bottom: 1.25rem;
-}
-
-.login-label {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 0.4rem;
-  letter-spacing: 0.01em;
-}
-
-.login-input-wrap {
-  position: relative;
-}
-
-.login-input {
-  width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.75rem;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface-2);
-  color: var(--text);
-  font-size: 0.9375rem;
-  transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
-  outline: none;
-}
-
-.login-input:focus {
-  border-color: var(--primary);
-  background: var(--surface);
-  box-shadow: 0 0 0 3px var(--primary-glow);
-}
-
-.login-input.error {
-  border-color: var(--danger);
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
-}
-
-.login-input-icon {
-  position: absolute;
-  left: 0.85rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-faint);
-  pointer-events: none;
-  transition: color 150ms ease;
-}
-
-.login-input:focus ~ .login-input-icon,
-.login-input-wrap:focus-within .login-input-icon {
-  color: var(--primary);
-}
-
-.login-pw-toggle {
-  position: absolute;
-  right: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-faint);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  transition: color 150ms ease;
-}
-.login-pw-toggle:hover { color: var(--text-muted); }
-
-/* Error message */
-.login-error-msg {
-  display: none;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background: var(--danger-light);
-  border: 1px solid rgba(220,38,38,0.2);
-  border-radius: var(--radius-md);
-  color: var(--danger);
-  font-size: 0.825rem;
-  font-weight: 500;
-  margin-bottom: 1.25rem;
-  animation: shake 0.4s cubic-bezier(0.36,0.07,0.19,0.97) both;
-}
-.login-error-msg.show { display: flex; }
-
-/* Remember me + forgot */
-.login-options {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
-}
-
-.login-remember {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  font-size: 0.825rem;
-  color: var(--text-muted);
-  user-select: none;
-}
-
-.login-checkbox {
-  width: 16px; height: 16px;
-  border-radius: 4px;
-  border: 1.5px solid var(--border);
-  appearance: none;
-  cursor: pointer;
-  transition: all 150ms ease;
-  position: relative;
-  flex-shrink: 0;
-  background: var(--surface-2);
-}
-.login-checkbox:checked {
-  background: var(--primary);
-  border-color: var(--primary);
-}
-.login-checkbox:checked::after {
-  content: '';
-  position: absolute;
-  left: 3px; top: 1px;
-  width: 8px; height: 5px;
-  border-left: 2px solid white;
-  border-bottom: 2px solid white;
-  transform: rotate(-45deg);
-}
-
-.login-forgot {
-  font-size: 0.825rem;
-  color: var(--primary);
-  text-decoration: none;
-  font-weight: 500;
-  transition: opacity 150ms ease;
-}
-.login-forgot:hover { opacity: 0.75; }
-
-/* Submit button */
-.login-btn {
-  width: 100%;
-  padding: 0.85rem 1.5rem;
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: var(--radius-lg);
-  font-size: 0.9375rem;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  transition: background 150ms ease, transform 80ms ease, box-shadow 150ms ease;
-  box-shadow: 0 2px 8px var(--primary-glow);
-  letter-spacing: 0.01em;
-  position: relative;
-  overflow: hidden;
-}
-.login-btn:hover {
-  background: var(--primary-hover);
-  box-shadow: 0 4px 16px var(--primary-glow);
-  transform: translateY(-1px);
-}
-.login-btn:active { transform: translateY(0); }
-.login-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Spinner inside button */
-.login-spinner {
-  display: none;
-  width: 18px; height: 18px;
-  border: 2px solid rgba(255,255,255,0.35);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-.login-btn.loading .login-btn-text { opacity: 0.5; }
-.login-btn.loading .login-spinner { display: block; }
-
-/* Demo hint */
-.login-hint {
-  margin-top: 1.5rem;
-  padding: 0.85rem 1rem;
-  background: var(--surface-2);
-  border: 1px solid var(--divider);
-  border-radius: var(--radius-md);
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  line-height: 1.6;
-}
-.login-hint strong { color: var(--text); font-family: var(--font-mono); font-size: 0.8rem; }
-
-/* Theme toggle on login page */
-.login-theme-btn {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  width: 36px; height: 36px;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
-  background: var(--surface-2);
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 150ms ease;
-}
-.login-theme-btn:hover {
-  background: var(--surface-offset);
-  color: var(--text);
+#lp-success.show{opacity:1;pointer-events:all;}
+.lp-check{
+  width:72px;height:72px;
+  border-radius:50%;
+  background:rgba(255,255,255,.18);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  animation:lp-pop .4s cubic-bezier(.16,1,.3,1) both;
 }
 
 /* Animations */
-@keyframes fadeSlideDown {
-  from { opacity: 0; transform: translateY(-16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes shake {
-  0%,100% { transform: translateX(0); }
-  20%      { transform: translateX(-6px); }
-  40%      { transform: translateX(6px); }
-  60%      { transform: translateX(-4px); }
-  80%      { transform: translateX(4px); }
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
+@keyframes lp-down{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+@keyframes lp-up  {from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none}}
+@keyframes lp-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes lp-spin{to{transform:rotate(360deg)}}
+@keyframes lp-pop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* Responsive */
+@media(max-width:768px){
+  .lp-wrap{grid-template-columns:1fr;}
+  .lp-brand{padding:2rem 1.5rem;min-height:auto;}
+  .lp-brand-mid h1{font-size:1.5rem;}
+  .lp-stats{display:none;}
+  .lp-form-panel{padding:2rem 1.25rem;}
 }
 
-/* Success flash overlay */
-.login-success-overlay {
-  position: fixed;
-  inset: 0;
-  background: var(--primary);
-  z-index: 99999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 300ms ease;
+/* ════════════════════════════════════════════════════
+   DASHBOARD — fix .main-area (was .main-wrapper)
+   ════════════════════════════════════════════════════ */
+.main-wrapper{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  height:100dvh;
+  overflow:hidden;
 }
-.login-success-overlay.show {
-  opacity: 1;
-  pointer-events: all;
-}
-.login-success-check {
-  width: 72px; height: 72px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: popIn 0.4s cubic-bezier(0.16,1,0.3,1) both;
-}
-@keyframes popIn {
-  from { transform: scale(0.5); opacity: 0; }
-  to   { transform: scale(1);   opacity: 1; }
-}
-
-/* Mobile responsive */
-@media (max-width: 768px) {
-  .login-split {
-    grid-template-columns: 1fr;
-  }
-  .login-brand {
-    padding: 2rem 1.5rem;
-    min-height: auto;
-  }
-  .brand-headline { font-size: 1.5rem; }
-  .brand-stats { display: none; }
-  .login-form-panel { padding: 2rem 1.5rem; }
+/* When dashboard is active, body stays scrollable via inner scroll */
+#page-dashboard .app-shell{
+  height:100dvh;
+  overflow:hidden;
 }
 </style>
 </head>
 <body>
 
-<!-- ===================== SUCCESS FLASH ===================== -->
-<div class="login-success-overlay" id="success-overlay">
-  <div class="login-success-check">
-    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="20 6 9 17 4 12"/>
-    </svg>
+<!-- SUCCESS FLASH -->
+<div id="lp-success">
+  <div class="lp-check">
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
   </div>
 </div>
 
-<!-- ===================== LOGIN PAGE ===================== -->
+<!-- ════════════════ LOGIN PAGE ════════════════ -->
 <div id="page-login" class="active">
-  <div class="login-split">
+  <div class="lp-wrap">
 
-    <!-- LEFT: Branding -->
-    <div class="login-brand">
-      <div class="brand-top">
-        <div class="brand-logos">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/d/dc/Logo_Kementerian_Kesehatan_Republik_Indonesia_%282024_rev%29.png"
-               alt="Logo Kemenkes RI"
-               class="brand-logo-img"
-               width="48" height="48"
-               loading="eager">
-          <div class="brand-logo-divider"></div>
+    <!-- LEFT: Brand -->
+    <div class="lp-brand">
+      <div class="lp-brand-top">
+        <div class="lp-logos">
+          <!-- Kemenkes RI logo (inline SVG, not external URL) -->
+          <div class="lp-kemenkes" title="Kementerian Kesehatan RI">
+            <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Cross / medical symbol -->
+              <rect x="20" y="4" width="8" height="40" rx="3" fill="white"/>
+              <rect x="4" y="20" width="40" height="8" rx="3" fill="white"/>
+              <!-- Small decorative circles at tips -->
+              <circle cx="24" cy="7" r="3" fill="rgba(255,255,255,0.5)"/>
+              <circle cx="24" cy="41" r="3" fill="rgba(255,255,255,0.5)"/>
+              <circle cx="7" cy="24" r="3" fill="rgba(255,255,255,0.5)"/>
+              <circle cx="41" cy="24" r="3" fill="rgba(255,255,255,0.5)"/>
+            </svg>
+          </div>
+          <div class="lp-div"></div>
           <!-- SIKESPA monogram -->
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-label="SIKESPA logo">
-            <rect width="40" height="40" rx="10" fill="rgba(255,255,255,0.15)"/>
-            <path d="M20 9v22M9 20h22" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-            <circle cx="20" cy="20" r="6" stroke="white" stroke-width="1.5" fill="none"/>
-          </svg>
+          <div class="lp-monogram" title="SIKESPA">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+              <path d="M15 3v24M3 15h24" stroke="white" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="15" cy="15" r="7" stroke="white" stroke-width="1.5" fill="none"/>
+            </svg>
+          </div>
         </div>
-        <div class="brand-wordmark">
-          <span class="brand-wordmark-name">SIKESPA</span>
-          <span class="brand-wordmark-sub">Dinas Kesehatan Provinsi Papua</span>
-        </div>
-      </div>
-
-      <div class="brand-center">
-        <h1 class="brand-headline">
-          Sistem Informasi<br>Kesehatan Papua
-        </h1>
-        <p class="brand-desc">
-          Platform monitoring kesehatan terpadu untuk seluruh kabupaten/kota
-          di Provinsi Papua — surveilans, logistik, faskes, dan pelaporan dalam satu dasbor.
-        </p>
-        <div class="brand-stats">
-          <div>
-            <span class="brand-stat-val">29</span>
-            <span class="brand-stat-label">Kabupaten/Kota</span>
-          </div>
-          <div>
-            <span class="brand-stat-val">1.2K+</span>
-            <span class="brand-stat-label">Fasilitas Kesehatan</span>
-          </div>
-          <div>
-            <span class="brand-stat-val">Real-time</span>
-            <span class="brand-stat-label">Data Update</span>
-          </div>
+        <div class="lp-wordmark">
+          <span class="lp-wordmark-name">SIKESPA</span>
+          <span class="lp-wordmark-sub">Dinas Kesehatan Provinsi Papua</span>
         </div>
       </div>
 
-      <div class="brand-bottom">
-        &copy; 2024 Dinas Kesehatan Provinsi Papua &nbsp;&middot;&nbsp; v2.4.1
+      <div class="lp-brand-mid">
+        <h1>Sistem Informasi<br>Kesehatan Papua</h1>
+        <p>Platform monitoring kesehatan terpadu untuk seluruh kabupaten/kota di Provinsi Papua — surveilans, logistik, faskes, dan pelaporan dalam satu dasbor.</p>
+        <div class="lp-stats">
+          <div><span class="lp-stat-val">29</span><span class="lp-stat-lbl">Kabupaten/Kota</span></div>
+          <div><span class="lp-stat-val">1.2K+</span><span class="lp-stat-lbl">Fasilitas Kesehatan</span></div>
+          <div><span class="lp-stat-val">Live</span><span class="lp-stat-lbl">Data Update</span></div>
+        </div>
+      </div>
+
+      <div class="lp-brand-bot">
+        &copy; <span id="lp-year"></span> Dinas Kesehatan Provinsi Papua &nbsp;&middot;&nbsp; v2.4.1
       </div>
     </div>
 
     <!-- RIGHT: Form -->
-    <div class="login-form-panel">
-
-      <!-- Theme toggle -->
-      <button class="login-theme-btn" id="login-theme-toggle" aria-label="Ganti tema">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        </svg>
+    <div class="lp-form-panel">
+      <button class="lp-theme-btn" id="lp-theme-btn" aria-label="Ganti tema">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
 
-      <div class="login-form-inner">
-        <h2 class="login-form-title">Selamat Datang</h2>
-        <p class="login-form-sub">Masuk dengan akun Dinas Kesehatan Anda</p>
+      <div class="lp-inner">
+        <h2>Selamat Datang</h2>
+        <p class="lp-sub">Masuk dengan akun Dinas Kesehatan Anda</p>
 
-        <!-- Error banner -->
-        <div class="login-error-msg" id="login-error" role="alert">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" flex-shrink="0">
-            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-          <span id="login-error-text">Username atau password salah.</span>
+        <div class="lp-err" id="lp-err" role="alert">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="lp-err-txt">Username atau password salah.</span>
         </div>
 
-        <form id="login-form" novalidate>
+        <form id="lp-form" novalidate>
           <!-- Username -->
-          <div class="login-field">
-            <label class="login-label" for="login-username">Username</label>
-            <div class="login-input-wrap">
-              <input
-                class="login-input"
-                type="text"
-                id="login-username"
-                name="username"
-                placeholder="Masukkan username"
-                autocomplete="username"
-                spellcheck="false"
-                required
-              >
-              <span class="login-input-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                  <circle cx="12" cy="7" r="4"/>
-                </svg>
+          <div class="lp-field">
+            <label class="lp-label" for="lp-username">Username</label>
+            <div class="lp-input-wrap">
+              <input class="lp-input" type="text" id="lp-username" placeholder="Masukkan username" autocomplete="username" spellcheck="false" required>
+              <span class="lp-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               </span>
             </div>
           </div>
 
           <!-- Password -->
-          <div class="login-field">
-            <label class="login-label" for="login-password">Password</label>
-            <div class="login-input-wrap">
-              <input
-                class="login-input"
-                type="password"
-                id="login-password"
-                name="password"
-                placeholder="Masukkan password"
-                autocomplete="current-password"
-                required
-              >
-              <span class="login-input-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                </svg>
+          <div class="lp-field">
+            <label class="lp-label" for="lp-password">Password</label>
+            <div class="lp-input-wrap">
+              <input class="lp-input" type="password" id="lp-password" placeholder="Masukkan password" autocomplete="current-password" required>
+              <span class="lp-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               </span>
-              <button type="button" class="login-pw-toggle" id="pw-toggle" aria-label="Tampilkan password">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="pw-eye">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                  <circle cx="12" cy="12" r="3"/>
-                </svg>
+              <button type="button" class="lp-pw-btn" id="lp-pw-btn" aria-label="Tampilkan password">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="lp-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               </button>
             </div>
           </div>
 
-          <!-- Remember me & forgot -->
-          <div class="login-options">
-            <label class="login-remember">
-              <input type="checkbox" class="login-checkbox" id="remember-me" name="remember">
-              Ingat saya
+          <!-- Options -->
+          <div class="lp-opts">
+            <label class="lp-remember">
+              <input type="checkbox" class="lp-chk" id="lp-remember"> Ingat saya
             </label>
-            <a href="#" class="login-forgot" onclick="alert('Hubungi administrator sistem.');return false;">
-              Lupa password?
-            </a>
+            <span class="lp-forgot" onclick="alert('Hubungi administrator sistem.')">Lupa password?</span>
           </div>
 
-          <!-- Submit -->
-          <button type="submit" class="login-btn" id="login-btn">
-            <div class="login-spinner" id="login-spinner"></div>
-            <span class="login-btn-text">Masuk ke Dashboard</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" id="login-arrow">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
+          <button type="submit" class="lp-btn" id="lp-btn">
+            <div class="lp-spinner"></div>
+            <span class="lp-btn-txt">Masuk ke Dashboard</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" id="lp-arrow"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
         </form>
 
-        <!-- Demo credentials hint -->
-        <div class="login-hint">
-          <strong>Demo:</strong> &nbsp; username: <strong>admin</strong> &nbsp;&middot;&nbsp; password: <strong>sikespa2024</strong><br>
-          <span style="margin-top:4px;display:block">Akses demo hanya untuk keperluan demonstrasi sistem.</span>
+        <div class="lp-hint">
+          <strong>Demo akun:</strong><br>
+          username: <code>admin</code> &nbsp;·&nbsp; password: <code>sikespa2024</code><br>
+          <span style="opacity:.7;margin-top:3px;display:block">Hanya untuk keperluan demonstrasi.</span>
         </div>
       </div>
     </div>
 
   </div>
 </div>
+<!-- ════════════ END LOGIN ════════════ -->
 
-<!-- ===================== DASHBOARD PAGE ===================== -->
-<div id="page-dashboard" style="display:none;width:100%;height:100dvh;">
+
+<!-- ════════════════ DASHBOARD PAGE ════════════════ -->
+<div id="page-dashboard" style="display:none;">
 <div class="app-shell">
 
-  <!-- ===================== SIDEBAR ===================== -->
+  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar" aria-label="Navigasi Utama">
     <div class="sidebar-header">
       <a href="#" class="sidebar-logo" aria-label="SIKESPA Home">
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
           <rect width="32" height="32" rx="8" fill="var(--primary)"/>
           <path d="M16 7v18M7 16h18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
           <circle cx="16" cy="16" r="5" stroke="white" stroke-width="1.5" fill="none"/>
         </svg>
         <span class="logo-text">SIKESPA</span>
       </a>
-      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar" aria-expanded="true">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
       </button>
     </div>
     <div class="sidebar-province">
@@ -683,68 +614,53 @@
     <nav class="sidebar-nav" id="sidebar-nav"></nav>
     <div class="sidebar-footer">
       <button class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         <span>Ganti Tema</span>
       </button>
       <div class="sidebar-user">
-        <div class="user-avatar" id="sidebar-user-avatar">KD</div>
+        <div class="user-avatar" id="sb-avatar">KD</div>
         <div class="user-info">
-          <span class="user-name" id="sidebar-user-name">Kepala Dinkes</span>
+          <span class="user-name" id="sb-name">Kepala Dinkes</span>
           <span class="user-role">Provinsi Papua</span>
         </div>
       </div>
     </div>
   </aside>
 
-  <!-- ===================== MAIN CONTENT ===================== -->
+  <!-- MAIN AREA -->
   <div class="main-wrapper">
-    <header class="topbar" id="topbar">
-      <!-- logout button injected here by renderTopbar -->
-    </header>
-    <main class="main-content" id="main-content" tabindex="-1">
-    </main>
+    <header class="topbar" id="topbar"></header>
+    <main class="main-content" id="main-content" tabindex="-1"></main>
   </div>
 
 </div>
-</div><!-- /#page-dashboard -->
+</div>
+<!-- ════════════ END DASHBOARD ════════════ -->
 
-<!-- ===================== PAGE TEMPLATES ===================== -->
 
-<!-- TEMPLATE: Beranda -->
+<!-- ═══════════ PAGE TEMPLATES ═══════════ -->
 <template id="tpl-beranda">
   <div class="page">
     <div class="kpi-grid" id="kpi-grid"></div>
     <div class="content-grid">
       <section class="section-card col-span-2">
-        <div class="section-card-head">
-          <h2 class="section-title">Peta Sebaran Penyakit</h2>
-          <span class="section-subtitle">Klik kabupaten untuk detail</span>
-        </div>
+        <div class="section-card-head"><h2 class="section-title">Peta Sebaran Penyakit</h2><span class="section-subtitle">Klik kabupaten untuk detail</span></div>
         <div class="section-card-body" id="peta-wrap"></div>
       </section>
       <section class="section-card">
-        <div class="section-card-head">
-          <h2 class="section-title">Alert Aktif</h2>
-          <span class="section-badge" id="alert-count">0</span>
-        </div>
+        <div class="section-card-head"><h2 class="section-title">Alert Aktif</h2><span class="section-badge" id="alert-count">0</span></div>
         <div class="section-card-body" id="alert-list"></div>
       </section>
     </div>
   </div>
 </template>
 
-<!-- TEMPLATE: Surveilans -->
 <template id="tpl-surveilans">
   <div class="page">
     <div class="content-grid">
       <section class="section-card col-span-3">
-        <div class="section-card-head">
-          <h2 class="section-title">Tren Penyakit — 12 Minggu Terakhir</h2>
-          <div id="tren-filter" class="pill-group"></div>
-        </div>
-        <div class="section-card-body chart-wrap" style="height:280px">
-          <canvas id="tren-chart"></canvas>
-        </div>
+        <div class="section-card-head"><h2 class="section-title">Tren Penyakit — 12 Minggu Terakhir</h2><div id="tren-filter" class="pill-group"></div></div>
+        <div class="section-card-body chart-wrap" style="height:280px"><canvas id="tren-chart"></canvas></div>
       </section>
       <section class="section-card col-span-3">
         <div class="section-card-head">
@@ -757,26 +673,13 @@
           </div>
         </div>
         <div class="section-card-body table-wrap">
-          <table class="data-table">
-            <thead><tr>
-              <th>Kabupaten</th>
-              <th class="num">Malaria</th>
-              <th class="num">TBC</th>
-              <th class="num">DBD</th>
-              <th class="num">Diare</th>
-              <th class="num">Pneumonia</th>
-              <th class="num">Total</th>
-              <th>Status</th>
-            </tr></thead>
-            <tbody id="surveilans-tbody"></tbody>
-          </table>
+          <table class="data-table"><thead><tr><th>Kabupaten</th><th class="num">Malaria</th><th class="num">TBC</th><th class="num">DBD</th><th class="num">Diare</th><th class="num">Pneumonia</th><th class="num">Total</th><th>Status</th></tr></thead><tbody id="surveilans-tbody"></tbody></table>
         </div>
       </section>
     </div>
   </div>
 </template>
 
-<!-- TEMPLATE: Obat & Logistik -->
 <template id="tpl-obat">
   <div class="page">
     <div class="content-grid">
@@ -791,702 +694,499 @@
           </div>
         </div>
         <div class="section-card-body table-wrap">
-          <table class="data-table">
-            <thead><tr>
-              <th>Kabupaten</th>
-              <th>Obat</th>
-              <th class="num">Stok Saat Ini</th>
-              <th class="num">Stok Minimum</th>
-              <th>Level</th>
-              <th>Status</th>
-            </tr></thead>
-            <tbody id="stok-tbody"></tbody>
-          </table>
+          <table class="data-table"><thead><tr><th>Kabupaten</th><th>Obat</th><th class="num">Stok</th><th class="num">Minimum</th><th>Level</th><th>Status</th></tr></thead><tbody id="stok-tbody"></tbody></table>
         </div>
       </section>
     </div>
   </div>
 </template>
 
-<!-- TEMPLATE: Kapasitas RS -->
 <template id="tpl-kapasitas">
   <div class="page">
     <div class="content-grid">
       <section class="section-card col-span-2">
-        <div class="section-card-head">
-          <h2 class="section-title">Tren Rata-rata BOR Provinsi</h2>
-        </div>
-        <div class="section-card-body chart-wrap" style="height:260px">
-          <canvas id="bor-tren-chart"></canvas>
-        </div>
+        <div class="section-card-head"><h2 class="section-title">Tren Rata-rata BOR Provinsi</h2></div>
+        <div class="section-card-body chart-wrap" style="height:260px"><canvas id="bor-tren-chart"></canvas></div>
       </section>
       <section class="section-card">
-        <div class="section-card-head">
-          <h2 class="section-title">Ringkasan BOR</h2>
-        </div>
-        <div class="section-card-body">
-          <div id="bor-summary"></div>
-        </div>
+        <div class="section-card-head"><h2 class="section-title">Ringkasan BOR</h2></div>
+        <div class="section-card-body"><div id="bor-summary"></div></div>
       </section>
       <section class="section-card col-span-3">
-        <div class="section-card-head">
-          <h2 class="section-title">BOR &amp; Kapasitas ICU per RS</h2>
-        </div>
+        <div class="section-card-head"><h2 class="section-title">BOR &amp; Kapasitas ICU per RS</h2></div>
         <div class="section-card-body table-wrap">
-          <table class="data-table">
-            <thead><tr>
-              <th>Rumah Sakit</th>
-              <th>Kabupaten</th>
-              <th class="num">Kapasitas</th>
-              <th class="num">Terisi</th>
-              <th>BOR</th>
-              <th class="num">ICU (terisi/total)</th>
-              <th>Status</th>
-            </tr></thead>
-            <tbody id="bor-tbody"></tbody>
-          </table>
+          <table class="data-table"><thead><tr><th>Rumah Sakit</th><th>Kabupaten</th><th class="num">Kapasitas</th><th class="num">Terisi</th><th>BOR</th><th class="num">ICU</th><th>Status</th></tr></thead><tbody id="bor-tbody"></tbody></table>
         </div>
       </section>
     </div>
   </div>
 </template>
 
-<!-- TEMPLATE: Rujukan -->
 <template id="tpl-rujukan">
   <div class="page">
     <div class="content-grid">
       <section class="section-card col-span-3">
-        <div class="section-card-head">
-          <h2 class="section-title">Monitoring Rujukan Pasien</h2>
-          <span class="section-subtitle">Realtime status transfer antar fasilitas</span>
-        </div>
+        <div class="section-card-head"><h2 class="section-title">Monitoring Rujukan Pasien</h2><span class="section-subtitle">Realtime status transfer antar fasilitas</span></div>
         <div class="section-card-body table-wrap">
-          <table class="data-table">
-            <thead><tr>
-              <th>ID Rujukan</th>
-              <th>Pasien</th>
-              <th>Asal</th>
-              <th>Tujuan</th>
-              <th>Diagnosa</th>
-              <th>Transport</th>
-              <th>Status</th>
-              <th>Waktu</th>
-            </tr></thead>
-            <tbody id="rujukan-tbody"></tbody>
-          </table>
+          <table class="data-table"><thead><tr><th>ID Rujukan</th><th>Pasien</th><th>Asal</th><th>Tujuan</th><th>Diagnosa</th><th>Transport</th><th>Status</th><th>Waktu</th></tr></thead><tbody id="rujukan-tbody"></tbody></table>
         </div>
       </section>
     </div>
   </div>
 </template>
 
-<!-- TEMPLATE: KIA -->
 <template id="tpl-kia">
   <div class="page">
     <div class="content-grid">
       <section class="section-card col-span-3">
-        <div class="section-card-head">
-          <h2 class="section-title">Indikator Kesehatan Ibu &amp; Anak</h2>
-        </div>
-        <div class="section-card-body">
-          <div id="kia-summary" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--space-4)"></div>
-        </div>
+        <div class="section-card-head"><h2 class="section-title">Indikator Kesehatan Ibu &amp; Anak</h2></div>
+        <div class="section-card-body"><div id="kia-summary" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:var(--space-4)"></div></div>
       </section>
       <section class="section-card col-span-3">
-        <div class="section-card-head">
-          <h2 class="section-title">Progress vs Target</h2>
-        </div>
+        <div class="section-card-head"><h2 class="section-title">Progress vs Target</h2></div>
         <div class="section-card-body" id="kia-progress"></div>
       </section>
     </div>
   </div>
 </template>
 
-<!-- TEMPLATE: Imunisasi -->
 <template id="tpl-imunisasi">
   <div class="page">
     <div class="content-grid">
       <section class="section-card">
-        <div class="section-card-head">
-          <h2 class="section-title">Radar Cakupan Imunisasi</h2>
-          <select id="imunisasi-radar-select" class="select-sm"></select>
-        </div>
-        <div class="section-card-body chart-wrap" style="height:260px">
-          <canvas id="imunisasi-radar"></canvas>
-        </div>
+        <div class="section-card-head"><h2 class="section-title">Radar Cakupan Imunisasi</h2><select id="imunisasi-radar-select" class="select-sm"></select></div>
+        <div class="section-card-body chart-wrap" style="height:260px"><canvas id="imunisasi-radar"></canvas></div>
       </section>
       <section class="section-card col-span-2">
-        <div class="section-card-head">
-          <h2 class="section-title">Cakupan Imunisasi per Kabupaten (%)</h2>
-        </div>
+        <div class="section-card-head"><h2 class="section-title">Cakupan Imunisasi per Kabupaten (%)</h2></div>
         <div class="section-card-body table-wrap">
-          <table class="data-table">
-            <thead><tr>
-              <th>Kabupaten</th>
-              <th class="num">BCG</th>
-              <th class="num">Polio</th>
-              <th class="num">DPT</th>
-              <th class="num">Campak</th>
-              <th class="num">HB0</th>
-              <th>Status</th>
-            </tr></thead>
-            <tbody id="imunisasi-tbody"></tbody>
-          </table>
+          <table class="data-table"><thead><tr><th>Kabupaten</th><th class="num">BCG</th><th class="num">Polio</th><th class="num">DPT</th><th class="num">Campak</th><th class="num">HB0</th><th>Status</th></tr></thead><tbody id="imunisasi-tbody"></tbody></table>
         </div>
       </section>
     </div>
   </div>
 </template>
 
-<!-- TEMPLATE: Gizi -->
 <template id="tpl-gizi">
   <div class="page">
     <div class="content-grid">
       <section class="section-card col-span-2">
-        <div class="section-card-head">
-          <h2 class="section-title">Scatter: Stunting vs Wasting</h2>
-        </div>
-        <div class="section-card-body chart-wrap" style="height:300px">
-          <canvas id="gizi-scatter"></canvas>
-        </div>
+        <div class="section-card-head"><h2 class="section-title">Scatter: Stunting vs Wasting</h2></div>
+        <div class="section-card-body chart-wrap" style="height:300px"><canvas id="gizi-scatter"></canvas></div>
       </section>
       <section class="section-card">
-        <div class="section-card-head">
-          <h2 class="section-title">Status Gizi per Kabupaten</h2>
-        </div>
+        <div class="section-card-head"><h2 class="section-title">Status Gizi per Kabupaten</h2></div>
         <div class="section-card-body table-wrap">
-          <table class="data-table">
-            <thead><tr>
-              <th>Kabupaten</th>
-              <th class="num">Stunting%</th>
-              <th class="num">Wasting%</th>
-              <th class="num">Underweight%</th>
-              <th>Status</th>
-            </tr></thead>
-            <tbody id="gizi-tbody"></tbody>
-          </table>
+          <table class="data-table"><thead><tr><th>Kabupaten</th><th class="num">Stunting%</th><th class="num">Wasting%</th><th class="num">Underweight%</th><th>Status</th></tr></thead><tbody id="gizi-tbody"></tbody></table>
         </div>
       </section>
     </div>
   </div>
 </template>
 
-<!-- TEMPLATE: Nakes -->
 <template id="tpl-nakes">
   <div class="page">
     <div class="content-grid">
       <section class="section-card col-span-2">
-        <div class="section-card-head">
-          <h2 class="section-title">Distribusi Tenaga Kesehatan</h2>
-        </div>
-        <div class="section-card-body chart-wrap" style="height:340px">
-          <canvas id="nakes-chart"></canvas>
-        </div>
+        <div class="section-card-head"><h2 class="section-title">Distribusi Tenaga Kesehatan</h2></div>
+        <div class="section-card-body chart-wrap" style="height:340px"><canvas id="nakes-chart"></canvas></div>
       </section>
       <section class="section-card">
-        <div class="section-card-head">
-          <h2 class="section-title">Tabel Nakes per Kabupaten</h2>
-        </div>
+        <div class="section-card-head"><h2 class="section-title">Tabel Nakes per Kabupaten</h2></div>
         <div class="section-card-body table-wrap">
-          <table class="data-table">
-            <thead><tr>
-              <th>Kabupaten</th>
-              <th class="num">Dokter</th>
-              <th class="num">Perawat</th>
-              <th class="num">Bidan</th>
-              <th class="num">Farmasi</th>
-              <th class="num">Total</th>
-              <th>Status</th>
-            </tr></thead>
-            <tbody id="nakes-tbody"></tbody>
-          </table>
+          <table class="data-table"><thead><tr><th>Kabupaten</th><th class="num">Dokter</th><th class="num">Perawat</th><th class="num">Bidan</th><th class="num">Farmasi</th><th class="num">Total</th><th>Status</th></tr></thead><tbody id="nakes-tbody"></tbody></table>
         </div>
       </section>
     </div>
   </div>
 </template>
 
-<!-- TEMPLATE: Laporan -->
 <template id="tpl-laporan">
   <div class="page">
     <div class="content-grid">
       <section class="section-card">
-        <div class="section-card-head">
-          <h2 class="section-title">Status Pelaporan</h2>
-          <span class="section-subtitle" id="laporan-bulan"></span>
-        </div>
-        <div class="section-card-body chart-wrap" style="height:220px">
-          <canvas id="laporan-chart"></canvas>
-        </div>
+        <div class="section-card-head"><h2 class="section-title">Status Pelaporan</h2><span class="section-subtitle" id="laporan-bulan"></span></div>
+        <div class="section-card-body chart-wrap" style="height:220px"><canvas id="laporan-chart"></canvas></div>
       </section>
       <section class="section-card col-span-2">
-        <div class="section-card-head">
-          <h2 class="section-title">Rincian Pelaporan Kabupaten</h2>
-        </div>
+        <div class="section-card-head"><h2 class="section-title">Rincian Pelaporan Kabupaten</h2></div>
         <div class="section-card-body table-wrap">
-          <table class="data-table">
-            <thead><tr>
-              <th>Kabupaten</th>
-              <th>Status</th>
-              <th>Tanggal Lapor</th>
-            </tr></thead>
-            <tbody id="laporan-tbody"></tbody>
-          </table>
+          <table class="data-table"><thead><tr><th>Kabupaten</th><th>Status</th><th>Tanggal Lapor</th></tr></thead><tbody id="laporan-tbody"></tbody></table>
         </div>
       </section>
     </div>
   </div>
 </template>
 
-<!-- ===================== SCRIPTS ===================== -->
+
+<!-- ═══════════ SCRIPTS ═══════════ -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="js/data.js"></script>
 <script src="js/charts.js"></script>
 <script>
 'use strict';
 
-// ============================================================
-// THEME (runs immediately, before paint)
-// ============================================================
-(function(){
-  const r = document.documentElement;
-  let d = matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
-  r.setAttribute('data-theme', d);
+// ── Tahun dinamis ──────────────────────────────────────────
+document.getElementById('lp-year').textContent = new Date().getFullYear();
 
-  function setTheme(dark) {
-    d = dark ? 'dark' : 'light';
-    r.setAttribute('data-theme', d);
-    // Update all theme toggle buttons
-    document.querySelectorAll('[data-theme-toggle], #login-theme-toggle').forEach(btn => {
-      btn.innerHTML = dark
-        ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>`
-        : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
-    });
+// ════════════════════════════════════════════════════════════
+// THEME
+// ════════════════════════════════════════════════════════════
+(function(){
+  const html = document.documentElement;
+  let theme = matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
+  html.setAttribute('data-theme', theme);
+
+  const MOON = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+  const SUN  = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>`;
+
+  function applyTheme(t){
+    theme = t;
+    html.setAttribute('data-theme', t);
+    document.querySelectorAll('[data-theme-toggle],[id="lp-theme-btn"]').forEach(b=>{ b.innerHTML = t==='dark'?SUN:MOON; });
   }
 
-  document.addEventListener('DOMContentLoaded', () => setTheme(d === 'dark'));
-
-  document.addEventListener('click', e => {
-    if (e.target.closest('[data-theme-toggle]') || e.target.closest('#login-theme-toggle')) {
-      setTheme(d !== 'dark');
+  document.addEventListener('DOMContentLoaded',()=>applyTheme(theme));
+  document.addEventListener('click', e=>{
+    if(e.target.closest('[data-theme-toggle]')||e.target.closest('#lp-theme-btn')){
+      applyTheme(theme==='dark'?'light':'dark');
     }
   });
 })();
 
-// ============================================================
-// AUTH — credentials store
-// ============================================================
+// ════════════════════════════════════════════════════════════
+// AUTH
+// ════════════════════════════════════════════════════════════
 const USERS = [
-  { username: 'admin',       password: 'sikespa2024', name: 'Administrator',   initials: 'AD' },
-  { username: 'kadinkes',    password: 'dinkes2024',  name: 'Kepala Dinkes',   initials: 'KD' },
-  { username: 'operator',    password: 'operator123', name: 'Operator Sistem', initials: 'OP' },
+  {username:'admin',    password:'sikespa2024', name:'Administrator',   initials:'AD'},
+  {username:'kadinkes', password:'dinkes2024',  name:'Kepala Dinkes',   initials:'KD'},
+  {username:'operator', password:'operator123', name:'Operator Sistem', initials:'OP'},
 ];
 
 let currentUser = null;
 
-function authenticate(username, password) {
-  return USERS.find(u =>
-    u.username.toLowerCase() === username.trim().toLowerCase() &&
-    u.password === password
-  ) || null;
-}
-
-// ============================================================
-// LOGIN FORM LOGIC
-// ============================================================
-document.addEventListener('DOMContentLoaded', () => {
-  const form        = document.getElementById('login-form');
-  const usernameEl  = document.getElementById('login-username');
-  const passwordEl  = document.getElementById('login-password');
-  const btnEl       = document.getElementById('login-btn');
-  const errorEl     = document.getElementById('login-error');
-  const errorTxtEl  = document.getElementById('login-error-text');
-  const pwToggleEl  = document.getElementById('pw-toggle');
-  const pwEyeEl     = document.getElementById('pw-eye');
-  const rememberEl  = document.getElementById('remember-me');
-  const overlay     = document.getElementById('success-overlay');
+// ════════════════════════════════════════════════════════════
+// LOGIN LOGIC
+// ════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', ()=>{
+  const form   = document.getElementById('lp-form');
+  const uEl    = document.getElementById('lp-username');
+  const pEl    = document.getElementById('lp-password');
+  const btnEl  = document.getElementById('lp-btn');
+  const errEl  = document.getElementById('lp-err');
+  const errTxt = document.getElementById('lp-err-txt');
+  const pwBtn  = document.getElementById('lp-pw-btn');
+  const eyeEl  = document.getElementById('lp-eye');
+  const remEl  = document.getElementById('lp-remember');
+  const successOverlay = document.getElementById('lp-success');
 
   // Restore remembered username
-  const remembered = sessionStorage.getItem('sikespa_remember');
-  if (remembered) {
-    usernameEl.value = remembered;
-    rememberEl.checked = true;
-  }
+  const mem = sessionStorage.getItem('sikespa_u');
+  if(mem){ uEl.value=mem; remEl.checked=true; }
 
-  // Password show/hide
-  pwToggleEl.addEventListener('click', () => {
-    const isText = passwordEl.type === 'text';
-    passwordEl.type = isText ? 'password' : 'text';
-    pwEyeEl.innerHTML = isText
+  // Password visibility
+  pwBtn.addEventListener('click', ()=>{
+    const isText = pEl.type==='text';
+    pEl.type = isText ? 'password' : 'text';
+    eyeEl.innerHTML = isText
       ? `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`
-      : `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-      <line x1="1" y1="1" x2="23" y2="23"/>`;
+      : `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`;
   });
 
-  // Clear errors on input
-  [usernameEl, passwordEl].forEach(el => {
-    el.addEventListener('input', () => {
-      el.classList.remove('error');
-      errorEl.classList.remove('show');
-    });
-  });
+  // Clear errors on typing
+  [uEl,pEl].forEach(el=>el.addEventListener('input',()=>{
+    el.classList.remove('err');
+    errEl.classList.remove('show');
+  }));
 
-  // Form submit
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-
-    const username = usernameEl.value.trim();
-    const password = passwordEl.value;
-
-    // Basic empty check
-    if (!username) {
-      usernameEl.classList.add('error');
-      showError('Username tidak boleh kosong.');
-      usernameEl.focus();
-      return;
-    }
-    if (!password) {
-      passwordEl.classList.add('error');
-      showError('Password tidak boleh kosong.');
-      passwordEl.focus();
-      return;
-    }
-
-    // Loading state
-    setLoading(true);
-
-    // Simulate network delay (300ms) for realism
-    await new Promise(r => setTimeout(r, 380));
-
-    const user = authenticate(username, password);
-
-    if (!user) {
-      setLoading(false);
-      usernameEl.classList.add('error');
-      passwordEl.classList.add('error');
-      showError('Username atau password salah. Silakan coba lagi.');
-      passwordEl.value = '';
-      passwordEl.focus();
-      return;
-    }
-
-    // Remember me
-    if (rememberEl.checked) {
-      sessionStorage.setItem('sikespa_remember', username);
-    } else {
-      sessionStorage.removeItem('sikespa_remember');
-    }
-
-    // Store session
-    currentUser = user;
-
-    // Success flash
-    overlay.classList.add('show');
-    await new Promise(r => setTimeout(r, 600));
-
-    // Transition to dashboard
-    enterDashboard(user);
-
-    overlay.classList.remove('show');
-  });
-
-  function showError(msg) {
-    errorTxtEl.textContent = msg;
-    errorEl.classList.remove('show');
-    // Force reflow to restart animation
-    void errorEl.offsetWidth;
-    errorEl.classList.add('show');
+  function showErr(msg){
+    errTxt.textContent = msg;
+    errEl.classList.remove('show');
+    void errEl.offsetWidth; // reflow for animation
+    errEl.classList.add('show');
   }
-
-  function setLoading(on) {
+  function setLoading(on){
     btnEl.disabled = on;
     btnEl.classList.toggle('loading', on);
+    const arrow = document.getElementById('lp-arrow');
+    if(arrow) arrow.style.display = on ? 'none' : '';
   }
+
+  form.addEventListener('submit', async e=>{
+    e.preventDefault();
+    const u = uEl.value.trim();
+    const p = pEl.value;
+    if(!u){ uEl.classList.add('err'); showErr('Username tidak boleh kosong.'); uEl.focus(); return; }
+    if(!p){ pEl.classList.add('err'); showErr('Password tidak boleh kosong.'); pEl.focus(); return; }
+
+    setLoading(true);
+    await new Promise(r=>setTimeout(r,400));
+
+    const user = USERS.find(x=>x.username.toLowerCase()===u.toLowerCase() && x.password===p);
+    if(!user){
+      setLoading(false);
+      [uEl,pEl].forEach(el=>el.classList.add('err'));
+      showErr('Username atau password salah. Silakan coba lagi.');
+      pEl.value=''; pEl.focus();
+      return;
+    }
+
+    if(remEl.checked) sessionStorage.setItem('sikespa_u',u);
+    else sessionStorage.removeItem('sikespa_u');
+
+    currentUser = user;
+    successOverlay.classList.add('show');
+    await new Promise(r=>setTimeout(r,550));
+    enterDashboard(user);
+    successOverlay.classList.remove('show');
+  });
 });
 
-// ============================================================
-// ENTER DASHBOARD
-// ============================================================
-function enterDashboard(user) {
-  // Hide login, show dashboard
+// ════════════════════════════════════════════════════════════
+// ENTER / EXIT DASHBOARD
+// ════════════════════════════════════════════════════════════
+function enterDashboard(user){
   const loginEl = document.getElementById('page-login');
   const dashEl  = document.getElementById('page-dashboard');
+
+  loginEl.style.transition = 'opacity .25s ease';
   loginEl.style.opacity = '0';
-  loginEl.style.transition = 'opacity 300ms ease';
-  setTimeout(() => {
+  setTimeout(()=>{
     loginEl.style.display = 'none';
+    loginEl.classList.remove('active');
+    document.body.style.overflow = 'hidden';
     dashEl.style.display = 'block';
     dashEl.style.opacity = '0';
-    dashEl.style.transition = 'opacity 300ms ease';
-    requestAnimationFrame(() => {
-      dashEl.style.opacity = '1';
-    });
-  }, 280);
+    dashEl.style.transition = 'opacity .3s ease';
+    requestAnimationFrame(()=>{ dashEl.style.opacity='1'; });
+  }, 240);
 
-  // Update sidebar user info
-  const avatarEl = document.getElementById('sidebar-user-avatar');
-  const nameEl   = document.getElementById('sidebar-user-name');
-  if (avatarEl) avatarEl.textContent = user.initials;
-  if (nameEl)   nameEl.textContent   = user.name;
+  // Populate sidebar user
+  const av = document.getElementById('sb-avatar');
+  const nm = document.getElementById('sb-name');
+  if(av) av.textContent = user.initials;
+  if(nm) nm.textContent = user.name;
 
-  // Boot the app
   renderSidebar();
   initSidebarToggle();
-
-  const hash = location.hash.replace('#', '') || 'beranda';
-  const validPage = NAV_ITEMS.find(n => n.id === hash) ? hash : 'beranda';
-  navigateTo(validPage);
-
-  // Charts deferred
-  setTimeout(() => { if (typeof initCharts === 'function') initCharts(); }, 150);
+  const hash = location.hash.replace('#','') || 'beranda';
+  const valid = NAV_ITEMS.find(n=>n.id===hash) ? hash : 'beranda';
+  navigateTo(valid);
+  setTimeout(()=>{ if(typeof initCharts==='function') initCharts(); }, 200);
 }
 
-// ============================================================
-// LOGOUT
-// ============================================================
-function logout() {
+function logout(){
   currentUser = null;
   const loginEl = document.getElementById('page-login');
   const dashEl  = document.getElementById('page-dashboard');
+  dashEl.style.transition = 'opacity .22s ease';
   dashEl.style.opacity = '0';
-  dashEl.style.transition = 'opacity 250ms ease';
-  setTimeout(() => {
+  setTimeout(()=>{
     dashEl.style.display = 'none';
-    loginEl.style.display = 'flex';
+    document.body.style.overflow = 'auto';
+    loginEl.style.display = 'block';
+    loginEl.classList.add('active');
     loginEl.style.opacity = '0';
-    loginEl.style.transition = 'opacity 300ms ease';
-    requestAnimationFrame(() => {
-      loginEl.style.opacity = '1';
-    });
-    // Reset form
-    const form = document.getElementById('login-form');
-    if (form) { const pw = form.querySelector('#login-password'); if(pw) pw.value=''; }
-  }, 240);
+    loginEl.style.transition = 'opacity .28s ease';
+    requestAnimationFrame(()=>{ loginEl.style.opacity='1'; });
+    const pEl = document.getElementById('lp-password');
+    if(pEl) pEl.value = '';
+  }, 210);
 }
 
-// ============================================================
-// APP — NAV CONFIG
-// ============================================================
+// ════════════════════════════════════════════════════════════
+// NAV CONFIG
+// ════════════════════════════════════════════════════════════
 const NAV_ITEMS = [
-  { id: 'beranda',   label: 'Beranda',         icon: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>' },
-  { id: 'surveilans',label: 'Surveilans',       icon: '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>' },
-  { id: 'obat',      label: 'Obat & Logistik', icon: '<path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>' },
-  { id: 'kapasitas', label: 'Kapasitas RS',     icon: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/>' },
-  { id: 'rujukan',   label: 'Rujukan',          icon: '<path d="M5 12h14M12 5l7 7-7 7"/>' },
-  { id: 'kia',       label: 'KIA',             icon: '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>' },
-  { id: 'imunisasi', label: 'Imunisasi',        icon: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' },
-  { id: 'gizi',      label: 'Gizi',             icon: '<path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>' },
-  { id: 'nakes',     label: 'Tenaga Kesehatan', icon: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' },
-  { id: 'laporan',   label: 'Laporan',          icon: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>' },
+  {id:'beranda',   label:'Beranda',          icon:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>'},
+  {id:'surveilans',label:'Surveilans',        icon:'<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>'},
+  {id:'obat',      label:'Obat & Logistik',  icon:'<path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>'},
+  {id:'kapasitas', label:'Kapasitas RS',      icon:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/>'},
+  {id:'rujukan',   label:'Rujukan',           icon:'<path d="M5 12h14M12 5l7 7-7 7"/>'},
+  {id:'kia',       label:'KIA',              icon:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>'},
+  {id:'imunisasi', label:'Imunisasi',         icon:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>'},
+  {id:'gizi',      label:'Gizi',              icon:'<path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>'},
+  {id:'nakes',     label:'Tenaga Kesehatan',  icon:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'},
+  {id:'laporan',   label:'Laporan',           icon:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>'},
 ];
 
 let currentPage = 'beranda';
 
-function svgIcon(paths, size = 18) {
+function icon(paths, size=18){
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
 }
 
-// ============================================================
-// SIDEBAR
-// ============================================================
-function renderSidebar() {
+// ════════════════════════════════════════════════════════════
+// SIDEBAR RENDER
+// ════════════════════════════════════════════════════════════
+function renderSidebar(){
   const nav = document.getElementById('sidebar-nav');
-  if (!nav) return;
-  nav.innerHTML = NAV_ITEMS.map(item => `
-    <a href="#${item.id}" class="nav-item ${currentPage === item.id ? 'active' : ''}" data-page="${item.id}" aria-current="${currentPage === item.id ? 'page' : 'false'}">
-      ${svgIcon(item.icon)}
+  if(!nav) return;
+  nav.innerHTML = NAV_ITEMS.map(item=>`
+    <a href="#${item.id}" class="nav-item ${currentPage===item.id?'active':''}" data-page="${item.id}" aria-current="${currentPage===item.id?'page':'false'}">
+      ${icon(item.icon)}
       <span class="nav-label">${item.label}</span>
-    </a>
-  `).join('');
-  nav.querySelectorAll('.nav-item').forEach(a => {
-    a.addEventListener('click', e => {
-      e.preventDefault();
-      navigateTo(a.dataset.page);
-    });
+    </a>`).join('');
+  nav.querySelectorAll('.nav-item').forEach(a=>{
+    a.addEventListener('click', e=>{ e.preventDefault(); navigateTo(a.dataset.page); });
   });
 }
 
-function initSidebarToggle() {
-  document.getElementById('sidebar-toggle')?.addEventListener('click', () => {
+function initSidebarToggle(){
+  document.getElementById('sidebar-toggle')?.addEventListener('click',()=>{
     document.getElementById('sidebar')?.classList.toggle('collapsed');
   });
 }
 
-// ============================================================
+// ════════════════════════════════════════════════════════════
 // TOPBAR
-// ============================================================
-function renderTopbar(label) {
+// ════════════════════════════════════════════════════════════
+function renderTopbar(label){
   const bar = document.getElementById('topbar');
-  if (!bar) return;
-  const now = new Date();
-  const tgl = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  const alertCount = (typeof DATA !== 'undefined') ? DATA.alerts.filter(a => a.level === 'critical').length : 0;
-  const userName = currentUser ? currentUser.name : 'Pengguna';
+  if(!bar) return;
+  const tgl = new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const critCount = (typeof DATA!=='undefined') ? DATA.alerts.filter(a=>a.level==='critical').length : 0;
+  const uName = currentUser ? currentUser.name : 'Pengguna';
   bar.innerHTML = `
     <div class="topbar-left">
-      <button class="topbar-menu-btn" id="topbar-menu" aria-label="Toggle menu">
-        ${svgIcon('<path d="M3 12h18M3 6h18M3 18h18">')}
-      </button>
+      <button class="topbar-menu-btn" id="topbar-menu" aria-label="Toggle menu">${icon('<path d="M3 12h18M3 6h18M3 18h18">')}</button>
       <div>
-        <h1 class="topbar-title">${label}</h1>
-        <span class="topbar-date">${tgl}</span>
+        <div class="topbar-title">${label}</div>
+        <div class="topbar-date">${tgl}</div>
       </div>
     </div>
     <div class="topbar-right">
-      <span class="topbar-province">
-        ${svgIcon('<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>', 14)}
-        ${userName}
-      </span>
-      ${alertCount > 0 ? `<span class="alert-badge" title="${alertCount} alert kritis">${alertCount}</span>` : ''}
+      <span class="topbar-province">${icon('<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',14)} ${uName}</span>
+      ${critCount>0?`<span class="alert-badge" title="${critCount} alert kritis">${critCount}</span>`:''}
       <button
         onclick="logout()"
-        title="Keluar"
-        style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--radius-lg);font-size:var(--text-xs);font-weight:600;color:var(--danger);border:1px solid var(--danger-light);background:var(--danger-light);cursor:pointer;transition:all 150ms ease;"
+        style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius-lg);font-size:var(--text-xs);font-weight:600;color:var(--danger);border:1px solid rgba(220,38,38,.2);background:var(--danger-light);cursor:pointer;transition:all 150ms ease;font-family:var(--font-body);"
         onmouseover="this.style.background='var(--danger)';this.style.color='white';"
         onmouseout="this.style.background='var(--danger-light)';this.style.color='var(--danger)';"
-      >
-        ${svgIcon('<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>', 14)}
-        Keluar
-      </button>
+      >${icon('<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>',14)} Keluar</button>
     </div>`;
-  document.getElementById('topbar-menu')?.addEventListener('click', () => {
+  document.getElementById('topbar-menu')?.addEventListener('click',()=>{
     document.getElementById('sidebar')?.classList.toggle('collapsed');
   });
 }
 
-// ============================================================
-// KPI GRID
-// ============================================================
-function renderKPI() {
+// ════════════════════════════════════════════════════════════
+// KPI
+// ════════════════════════════════════════════════════════════
+function renderKPI(){
   const grid = document.getElementById('kpi-grid');
-  if (!grid) return;
+  if(!grid||typeof DATA==='undefined') return;
   const kpis = Object.values(DATA.kpi);
-  const icons = [
+  const colors = ['primary','danger','info','success'];
+  const icons2 = [
     '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>',
     '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
     '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/>',
     '<path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>',
   ];
-  grid.innerHTML = kpis.map((k, i) => {
-    const up = k.delta > 0;
-    const arrowColor = up ? 'var(--danger)' : 'var(--success)';
-    const arrowIcon  = up
-      ? '<polyline points="18 15 12 9 6 15"/>'
-      : '<polyline points="6 9 12 15 18 9"/>';
+  grid.innerHTML = kpis.map((k,i)=>{
+    const up = k.delta>0;
     return `
-      <div class="kpi-card">
-        <div class="kpi-icon">${svgIcon(icons[i], 20)}</div>
-        <div class="kpi-body">
-          <div class="kpi-label">${k.label}</div>
-          <div class="kpi-value" style="font-variant-numeric:tabular-nums">${k.value.toLocaleString('id-ID')} <span class="kpi-unit">${k.unit}</span></div>
-          <div class="kpi-delta" style="color:${arrowColor}">
-            ${svgIcon(arrowIcon, 12)}
-            ${Math.abs(k.delta)}% vs minggu lalu
-          </div>
-        </div>
-      </div>`;
+    <div class="kpi-card ${colors[i]}">
+      <div class="kpi-header">
+        <div class="kpi-icon">${icon(icons2[i],18)}</div>
+        <span class="kpi-trend ${up?'up':'down'}">${icon(up?'<polyline points="18 15 12 9 6 15"/>':'<polyline points="6 9 12 15 18 9"/>',10)} ${Math.abs(k.delta)}%</span>
+      </div>
+      <div class="kpi-value">${k.value.toLocaleString('id-ID')}<span style="font-size:var(--text-sm);font-weight:400;color:var(--text-muted)"> ${k.unit}</span></div>
+      <div class="kpi-label">${k.label}</div>
+    </div>`;
   }).join('');
 }
 
-// ============================================================
-// ALERT LIST
-// ============================================================
-function renderAlerts() {
+// ════════════════════════════════════════════════════════════
+// ALERTS
+// ════════════════════════════════════════════════════════════
+function renderAlerts(){
   const list  = document.getElementById('alert-list');
   const badge = document.getElementById('alert-count');
-  if (!list) return;
-  if (badge) badge.textContent = DATA.alerts.length;
-  list.innerHTML = DATA.alerts.map(a => `
-    <div class="alert-item alert-${a.level}">
-      <div class="alert-meta">
-        <span class="alert-kab">${a.kabupaten}</span>
-        <span class="alert-time">${a.waktu}</span>
+  if(!list||typeof DATA==='undefined') return;
+  if(badge) badge.textContent = DATA.alerts.length;
+  list.innerHTML = DATA.alerts.map(a=>`
+    <div class="alert-item ${a.level}">
+      <div class="alert-dot"></div>
+      <div class="alert-content">
+        <div class="alert-title">${a.kabupaten}</div>
+        <div class="alert-desc">${a.pesan}</div>
+        <div class="alert-meta"><span class="alert-time">${a.waktu}</span></div>
       </div>
-      <p class="alert-msg">${a.pesan}</p>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-// ============================================================
+// ════════════════════════════════════════════════════════════
 // BOR SUMMARY
-// ============================================================
-function renderBORSummary() {
+// ════════════════════════════════════════════════════════════
+function renderBORSummary(){
   const wrap = document.getElementById('bor-summary');
-  if (!wrap) return;
-  const total    = DATA.bor.length;
-  const critical = DATA.bor.filter(r => r.status === 'critical').length;
-  const warning  = DATA.bor.filter(r => r.status === 'warning').length;
-  const normal   = DATA.bor.filter(r => r.status === 'normal').length;
-  const avgBOR   = Math.round(DATA.bor.reduce((s, r) => s + r.bor, 0) / total);
+  if(!wrap||typeof DATA==='undefined') return;
+  const total = DATA.bor.length;
+  const crit  = DATA.bor.filter(r=>r.status==='critical').length;
+  const warn  = DATA.bor.filter(r=>r.status==='warning').length;
+  const norm  = DATA.bor.filter(r=>r.status==='normal').length;
+  const avg   = Math.round(DATA.bor.reduce((s,r)=>s+r.bor,0)/total);
   wrap.innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-4)">
-      <div class="mini-stat"><span class="mini-stat-val" style="color:var(--danger)">${critical}</span><span class="mini-stat-label">RS BOR Kritis (&gt;85%)</span></div>
-      <div class="mini-stat"><span class="mini-stat-val" style="color:var(--warning)">${warning}</span><span class="mini-stat-label">RS BOR Waspada</span></div>
-      <div class="mini-stat"><span class="mini-stat-val" style="color:var(--success)">${normal}</span><span class="mini-stat-label">RS BOR Normal</span></div>
-      <div class="mini-stat"><span class="mini-stat-val">${avgBOR}%</span><span class="mini-stat-label">Rata-rata BOR Provinsi</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)">
+      <div class="mini-stat"><span class="mini-stat-val" style="color:var(--danger)">${crit}</span><span class="mini-stat-label">RS BOR Kritis (&gt;85%)</span></div>
+      <div class="mini-stat"><span class="mini-stat-val" style="color:var(--warning)">${warn}</span><span class="mini-stat-label">RS BOR Waspada</span></div>
+      <div class="mini-stat"><span class="mini-stat-val" style="color:var(--success)">${norm}</span><span class="mini-stat-label">RS BOR Normal</span></div>
+      <div class="mini-stat"><span class="mini-stat-val">${avg}%</span><span class="mini-stat-label">Rata-rata BOR Provinsi</span></div>
     </div>`;
 }
 
-// ============================================================
-// LAPORAN META
-// ============================================================
-function renderLaporanMeta() {
-  const el = document.getElementById('laporan-bulan');
-  if (el) el.textContent = DATA.laporan.bulan;
-}
-
-// ============================================================
+// ════════════════════════════════════════════════════════════
 // ROUTER
-// ============================================================
+// ════════════════════════════════════════════════════════════
 const PAGE_INIT = {
-  beranda: () => {
-    renderKPI();
-    renderAlerts();
-    renderPeta();
-  },
-  surveilans: () => {
+  beranda:   ()=>{ renderKPI(); renderAlerts(); renderPeta(); },
+  surveilans:()=>{
     renderSurveilansTable();
     renderTrenFilter();
-    document.getElementById('surveilans-filter')?.querySelectorAll('.pill').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.getElementById('surveilans-filter').querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderSurveilansTable(btn.dataset.filter);
+    document.getElementById('surveilans-filter')?.querySelectorAll('.pill').forEach(b=>{
+      b.addEventListener('click',()=>{
+        document.getElementById('surveilans-filter').querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+        b.classList.add('active'); renderSurveilansTable(b.dataset.filter);
       });
     });
   },
-  obat: () => {
+  obat:()=>{
     renderStokObat();
-    document.getElementById('stok-filter')?.querySelectorAll('.pill').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.getElementById('stok-filter').querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderStokObat(btn.dataset.filter);
+    document.getElementById('stok-filter')?.querySelectorAll('.pill').forEach(b=>{
+      b.addEventListener('click',()=>{
+        document.getElementById('stok-filter').querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+        b.classList.add('active'); renderStokObat(b.dataset.filter);
       });
     });
   },
-  kapasitas: () => { renderBORTable(); renderBorTrenChart(); renderBORSummary(); },
-  rujukan:   () => renderRujukan(),
-  kia:       () => { renderKIASummary(); renderKIAProgress(); },
-  imunisasi: () => { renderImunisasiTable(); renderImunisasiRadarDropdown(); },
-  gizi:      () => { renderGiziTable(); renderGiziChart(); },
-  nakes:     () => { renderNakesTable(); renderNakesChart(); },
-  laporan:   () => { renderLaporanChart(); renderLaporanDetail(); renderLaporanMeta(); },
+  kapasitas: ()=>{ renderBORTable(); renderBorTrenChart(); renderBORSummary(); },
+  rujukan:   ()=>renderRujukan(),
+  kia:       ()=>{ renderKIASummary(); renderKIAProgress(); },
+  imunisasi: ()=>{ renderImunisasiTable(); renderImunisasiRadarDropdown(); },
+  gizi:      ()=>{ renderGiziTable(); renderGiziChart(); },
+  nakes:     ()=>{ renderNakesTable(); renderNakesChart(); },
+  laporan:   ()=>{
+    renderLaporanChart(); renderLaporanDetail();
+    const el=document.getElementById('laporan-bulan');
+    if(el&&typeof DATA!=='undefined') el.textContent=DATA.laporan.bulan;
+  },
 };
 
-function navigateTo(pageId) {
+function navigateTo(pageId){
   currentPage = pageId;
   const tpl  = document.getElementById(`tpl-${pageId}`);
   const main = document.getElementById('main-content');
-  if (!tpl || !main) return;
-  main.innerHTML = '';
+  if(!tpl||!main) return;
+  main.innerHTML='';
   main.appendChild(tpl.content.cloneNode(true));
-  main.scrollTop = 0;
-  const nav = NAV_ITEMS.find(n => n.id === pageId);
-  if (nav) renderTopbar(nav.label);
+  main.scrollTop=0;
+  const nav = NAV_ITEMS.find(n=>n.id===pageId);
+  if(nav) renderTopbar(nav.label);
   renderSidebar();
   PAGE_INIT[pageId]?.();
-  history.replaceState(null, '', `#${pageId}`);
+  history.replaceState(null,'',`#${pageId}`);
 }
 </script>
 </body>
