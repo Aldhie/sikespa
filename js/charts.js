@@ -5,12 +5,12 @@
 'use strict';
 
 // ---- Shared colour palette ----
-const C_RED    = 'var(--color-error)';
-const C_ORANGE = 'var(--color-warning)';
-const C_GREEN  = 'var(--color-success)';
-const C_BLUE   = 'var(--color-blue)';
-const C_TEAL   = 'var(--color-primary)';
-const C_MUTED  = 'var(--color-text-muted)';
+const C_RED    = 'var(--danger)';
+const C_ORANGE = 'var(--warning)';
+const C_GREEN  = 'var(--success)';
+const C_BLUE   = 'var(--info)';
+const C_TEAL   = 'var(--primary)';
+const C_MUTED  = 'var(--text-muted)';
 
 // ============================================================
 // 1. TREN PENYAKIT (multi-line chart)
@@ -55,11 +55,11 @@ function renderTrenChart(selectedPenyakit = ['malaria']) {
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { position: 'top', labels: { boxWidth: 12, font: { size: 12 } } },
-        tooltip: { backgroundColor: 'var(--color-surface)', titleColor: 'var(--color-text)', bodyColor: 'var(--color-text-muted)', borderColor: 'var(--color-border)', borderWidth: 1 },
+        tooltip: { backgroundColor: 'var(--surface)', titleColor: 'var(--text)', bodyColor: 'var(--text-muted)', borderColor: 'var(--border)', borderWidth: 1 },
       },
       scales: {
-        x: { grid: { color: 'var(--color-divider)' }, ticks: { color: 'var(--color-text-muted)', font: { size: 11 } } },
-        y: { grid: { color: 'var(--color-divider)' }, ticks: { color: 'var(--color-text-muted)', font: { size: 11 } }, beginAtZero: false },
+        x: { grid: { color: 'var(--divider)' }, ticks: { color: 'var(--text-muted)', font: { size: 11 } } },
+        y: { grid: { color: 'var(--divider)' }, ticks: { color: 'var(--text-muted)', font: { size: 11 } }, beginAtZero: false },
       },
     },
   });
@@ -135,11 +135,11 @@ function renderBorTrenChart() {
       maintainAspectRatio: false,
       plugins: {
         legend: { position: 'top', labels: { boxWidth: 12, font: { size: 12 } } },
-        tooltip: { backgroundColor: 'var(--color-surface)', titleColor: 'var(--color-text)', bodyColor: 'var(--color-text-muted)', borderColor: 'var(--color-border)', borderWidth: 1 },
+        tooltip: { backgroundColor: 'var(--surface)', titleColor: 'var(--text)', bodyColor: 'var(--text-muted)', borderColor: 'var(--border)', borderWidth: 1 },
       },
       scales: {
-        x: { grid: { display: false }, ticks: { color: 'var(--color-text-muted)', font: { size: 11 } } },
-        y: { grid: { color: 'var(--color-divider)' }, ticks: { color: 'var(--color-text-muted)', font: { size: 11 } }, min: 0, max: 100 },
+        x: { grid: { display: false }, ticks: { color: 'var(--text-muted)', font: { size: 11 } } },
+        y: { grid: { color: 'var(--divider)' }, ticks: { color: 'var(--text-muted)', font: { size: 11 } }, min: 0, max: 100 },
       },
     },
   });
@@ -183,14 +183,14 @@ function renderImunisasiRadar(idx = 0) {
       scales: {
         r: {
           min: 0, max: 100,
-          ticks: { stepSize: 25, backdropColor: 'transparent', color: 'var(--color-text-muted)', font: { size: 10 } },
-          grid: { color: 'var(--color-divider)' },
-          pointLabels: { color: 'var(--color-text)', font: { size: 11 } },
+          ticks: { stepSize: 25, backdropColor: 'transparent', color: 'var(--text-muted)', font: { size: 10 } },
+          grid: { color: 'var(--divider)' },
+          pointLabels: { color: 'var(--text)', font: { size: 11 } },
         },
       },
       plugins: {
         legend: { position: 'top', labels: { boxWidth: 12, font: { size: 12 } } },
-        tooltip: { backgroundColor: 'var(--color-surface)', titleColor: 'var(--color-text)', bodyColor: 'var(--color-text-muted)', borderColor: 'var(--color-border)', borderWidth: 1 },
+        tooltip: { backgroundColor: 'var(--surface)', titleColor: 'var(--text)', bodyColor: 'var(--text-muted)', borderColor: 'var(--border)', borderWidth: 1 },
       },
     },
   });
@@ -234,7 +234,7 @@ function renderGiziChart() {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: 'var(--color-surface)', titleColor: 'var(--color-text)', bodyColor: 'var(--color-text-muted)', borderColor: 'var(--color-border)', borderWidth: 1,
+          backgroundColor: 'var(--surface)', titleColor: 'var(--text)', bodyColor: 'var(--text-muted)', borderColor: 'var(--border)', borderWidth: 1,
           callbacks: {
             title: items => items[0].raw.label,
             label: item => `Stunting: ${item.raw.x}% | Wasting: ${item.raw.y}%`,
@@ -242,8 +242,8 @@ function renderGiziChart() {
         },
       },
       scales: {
-        x: { title: { display: true, text: 'Stunting (%)', color: 'var(--color-text-muted)', font: { size: 11 } }, grid: { color: 'var(--color-divider)' }, ticks: { color: 'var(--color-text-muted)', font: { size: 11 } } },
-        y: { title: { display: true, text: 'Wasting (%)', color: 'var(--color-text-muted)', font: { size: 11 } }, grid: { color: 'var(--color-divider)' }, ticks: { color: 'var(--color-text-muted)', font: { size: 11 } } },
+        x: { title: { display: true, text: 'Stunting (%)', color: 'var(--text-muted)', font: { size: 11 } }, grid: { color: 'var(--divider)' }, ticks: { color: 'var(--text-muted)', font: { size: 11 } } },
+        y: { title: { display: true, text: 'Wasting (%)', color: 'var(--text-muted)', font: { size: 11 } }, grid: { color: 'var(--divider)' }, ticks: { color: 'var(--text-muted)', font: { size: 11 } } },
       },
     },
   });
@@ -275,11 +275,11 @@ function renderNakesChart() {
       maintainAspectRatio: false,
       plugins: {
         legend: { position: 'top', labels: { boxWidth: 12, font: { size: 12 } } },
-        tooltip: { backgroundColor: 'var(--color-surface)', titleColor: 'var(--color-text)', bodyColor: 'var(--color-text-muted)', borderColor: 'var(--color-border)', borderWidth: 1 },
+        tooltip: { backgroundColor: 'var(--surface)', titleColor: 'var(--text)', bodyColor: 'var(--text-muted)', borderColor: 'var(--border)', borderWidth: 1 },
       },
       scales: {
-        x: { stacked: true, grid: { color: 'var(--color-divider)' }, ticks: { color: 'var(--color-text-muted)', font: { size: 11 } } },
-        y: { stacked: true, grid: { display: false }, ticks: { color: 'var(--color-text-muted)', font: { size: 11 } } },
+        x: { stacked: true, grid: { color: 'var(--divider)' }, ticks: { color: 'var(--text-muted)', font: { size: 11 } } },
+        y: { stacked: true, grid: { display: false }, ticks: { color: 'var(--text-muted)', font: { size: 11 } } },
       },
     },
   });
@@ -303,7 +303,7 @@ function renderLaporanChart() {
         data: [d.terkirim - d.terlambat, d.terlambat, d.belumLapor],
         backgroundColor: ['#40b060cc', '#e0a020cc', '#e05050cc'],
         borderWidth: 2,
-        borderColor: 'var(--color-surface)',
+        borderColor: 'var(--surface)',
       }],
     },
     options: {
@@ -312,7 +312,7 @@ function renderLaporanChart() {
       cutout: '65%',
       plugins: {
         legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 12 } } },
-        tooltip: { backgroundColor: 'var(--color-surface)', titleColor: 'var(--color-text)', bodyColor: 'var(--color-text-muted)', borderColor: 'var(--color-border)', borderWidth: 1 },
+        tooltip: { backgroundColor: 'var(--surface)', titleColor: 'var(--text)', bodyColor: 'var(--text-muted)', borderColor: 'var(--border)', borderWidth: 1 },
       },
     },
   });
@@ -361,10 +361,10 @@ function renderStokObat(filter = 'semua') {
       <td class="num" style="font-variant-numeric:tabular-nums">${r.stok} ${r.satuan}</td>
       <td class="num" style="font-variant-numeric:tabular-nums">${r.minimum} ${r.satuan}</td>
       <td style="min-width:100px">
-        <div style="height:6px;background:var(--color-divider);border-radius:9999px;overflow:hidden">
+        <div style="height:6px;background:var(--divider);border-radius:9999px;overflow:hidden">
           <div style="height:100%;width:${fillPct}%;background:${barColor};border-radius:9999px"></div>
         </div>
-        <span style="font-size:var(--text-xs);color:var(--color-text-muted);font-variant-numeric:tabular-nums">${pct}%</span>
+        <span style="font-size:var(--text-xs);color:var(--text-muted);font-variant-numeric:tabular-nums">${pct}%</span>
       </td>
       <td><span class="badge badge-${r.status}">${r.status === 'critical' ? 'Kritis' : r.status === 'warning' ? 'Waspada' : 'Normal'}</span></td>
     </tr>`;
@@ -386,10 +386,10 @@ function renderBORTable() {
       <td class="num">${r.kapasitas}</td>
       <td class="num">${r.terisi}</td>
       <td style="min-width:100px">
-        <div style="height:6px;background:var(--color-divider);border-radius:9999px;overflow:hidden">
+        <div style="height:6px;background:var(--divider);border-radius:9999px;overflow:hidden">
           <div style="height:100%;width:${r.bor}%;background:${barColor};border-radius:9999px"></div>
         </div>
-        <span style="font-size:var(--text-xs);color:var(--color-text-muted);font-variant-numeric:tabular-nums">${r.bor}%</span>
+        <span style="font-size:var(--text-xs);color:var(--text-muted);font-variant-numeric:tabular-nums">${r.bor}%</span>
       </td>
       <td class="num">${r.icu.terisi}/${r.icu.kapasitas}</td>
       <td><span class="badge badge-${r.status}">${r.status === 'critical' ? 'Kritis' : r.status === 'warning' ? 'Waspada' : 'Normal'}</span></td>
@@ -404,22 +404,22 @@ function renderRujukan() {
   const tbody = document.getElementById('rujukan-tbody');
   if (!tbody) return;
   const statusMap = {
-    'dalam-perjalanan': { label: 'Dalam Perjalanan', color: 'var(--color-blue)' },
-    'tiba':             { label: 'Tiba di RS Tujuan', color: 'var(--color-success)' },
-    'selesai':          { label: 'Selesai',            color: 'var(--color-text-muted)' },
+    'dalam-perjalanan': { label: 'Dalam Perjalanan', color: 'var(--info)' },
+    'tiba':             { label: 'Tiba di RS Tujuan', color: 'var(--success)' },
+    'selesai':          { label: 'Selesai',            color: 'var(--text-muted)' },
   };
   tbody.innerHTML = DATA.rujukan.map(r => {
     const s = statusMap[r.status] || { label: r.status, color: 'inherit' };
     return `
     <tr>
-      <td style="font-size:var(--text-xs);font-variant-numeric:tabular-nums;color:var(--color-text-muted)">${r.id}</td>
+      <td style="font-size:var(--text-xs);font-variant-numeric:tabular-nums;color:var(--text-muted)">${r.id}</td>
       <td>${r.pasien}</td>
       <td>${r.asal}</td>
       <td>${r.tujuan}</td>
       <td>${r.diagnosa}</td>
       <td>${r.transport}</td>
       <td><span style="color:${s.color};font-size:var(--text-xs);font-weight:600">${s.label}</span></td>
-      <td style="font-size:var(--text-xs);color:var(--color-text-muted)">${r.waktu}</td>
+      <td style="font-size:var(--text-xs);color:var(--text-muted)">${r.waktu}</td>
     </tr>`;
   }).join('');
 }
@@ -433,7 +433,7 @@ function renderImunisasiTable() {
   tbody.innerHTML = DATA.imunisasi.map(r => {
     const cols = ['bcg','polio','dpt','campak','hb0'].map(k => {
       const v = r[k];
-      const color = v >= 80 ? 'var(--color-success)' : v >= 60 ? 'var(--color-warning)' : 'var(--color-error)';
+      const color = v >= 80 ? 'var(--success)' : v >= 60 ? 'var(--warning)' : 'var(--danger)';
       return `<td class="num" style="color:${color};font-variant-numeric:tabular-nums">${v}%</td>`;
     }).join('');
     return `<tr><td>${r.kabupaten}</td>${cols}<td><span class="badge badge-${r.status}">${r.status === 'critical' ? 'Kritis' : r.status === 'warning' ? 'Waspada' : 'Normal'}</span></td></tr>`;
@@ -448,7 +448,7 @@ function renderGiziTable() {
   if (!tbody) return;
   tbody.innerHTML = DATA.gizi.map(r => {
     const col = (v, warn, crit) => {
-      const color = v >= crit ? 'var(--color-error)' : v >= warn ? 'var(--color-warning)' : 'var(--color-success)';
+      const color = v >= crit ? 'var(--danger)' : v >= warn ? 'var(--warning)' : 'var(--success)';
       return `<td class="num" style="color:${color};font-variant-numeric:tabular-nums">${v}%</td>`;
     };
     return `<tr>
@@ -500,16 +500,16 @@ function renderKIASummary() {
     const item = kia[key];
     if (!item) return '';
     const ok = item.higherIsBetter ? item.value >= item.target : item.value <= item.target;
-    const color = ok ? 'var(--color-success)' : 'var(--color-error)';
+    const color = ok ? 'var(--success)' : 'var(--danger)';
     const arrow = item.higherIsBetter
       ? (item.value >= item.target ? '↑' : '↓')
       : (item.value <= item.target ? '↓' : '↑');
-    const arrowColor = ok ? 'var(--color-success)' : 'var(--color-error)';
+    const arrowColor = ok ? 'var(--success)' : 'var(--danger)';
     return `
-      <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4);">
-        <div style="font-size:var(--text-xs);color:var(--color-text-muted);margin-bottom:var(--space-1)">${item.label}</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-4);">
+        <div style="font-size:var(--text-xs);color:var(--text-muted);margin-bottom:var(--space-1)">${item.label}</div>
         <div style="font-size:var(--text-xl);font-weight:700;color:${color};font-variant-numeric:tabular-nums">${item.value}<span style="font-size:var(--text-sm);font-weight:400">${item.unit}</span></div>
-        <div style="font-size:var(--text-xs);color:var(--color-text-muted)">Target: ${item.target}${item.unit} <span style="color:${arrowColor};font-weight:700">${arrow}</span></div>
+        <div style="font-size:var(--text-xs);color:var(--text-muted)">Target: ${item.target}${item.unit} <span style="color:${arrowColor};font-weight:700">${arrow}</span></div>
       </div>`;
   }).join('');
 }
@@ -530,7 +530,7 @@ function renderLaporanDetail() {
     return `<tr>
       <td>${r.kabupaten}</td>
       <td><span class="badge badge-${s.cls}">${s.label}</span></td>
-      <td style="font-size:var(--text-xs);color:var(--color-text-muted)">${r.tanggal}</td>
+      <td style="font-size:var(--text-xs);color:var(--text-muted)">${r.tanggal}</td>
     </tr>`;
   }).join('');
 }
@@ -556,27 +556,27 @@ function renderPeta() {
         <circle cx="${cx}" cy="${cy}" r="${r}" fill="${c}" fill-opacity="0.25" stroke="${c}" stroke-width="1.5"/>
         <circle cx="${cx}" cy="${cy}" r="3" fill="${c}"/>
         <text x="${cx}" y="${cy - r - 4}" text-anchor="middle"
-              font-size="10" fill="var(--color-text-muted)" font-family="inherit">${p.label}</text>
+              font-size="10" fill="var(--text-muted)" font-family="inherit">${p.label}</text>
       </g>`;
   }).join('');
 
   wrap.innerHTML = `
     <svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"
-         style="background:var(--color-surface-offset);border-radius:var(--radius-lg);display:block">
-      <rect width="${W}" height="${H}" fill="var(--color-surface-offset)" rx="12"/>
-      <text x="12" y="20" font-size="11" fill="var(--color-text-muted)" font-family="inherit">Papua Province — Bubble size = total kasus</text>
+         style="background:var(--surface-offset);border-radius:var(--radius-lg);display:block">
+      <rect width="${W}" height="${H}" fill="var(--surface-offset)" rx="12"/>
+      <text x="12" y="20" font-size="11" fill="var(--text-muted)" font-family="inherit">Papua Province — Bubble size = total kasus</text>
       ${bubbles}
     </svg>
     <div style="display:flex;gap:var(--space-4);margin-top:var(--space-3);flex-wrap:wrap">
       ${[['critical','#e05050','Kritis'],['warning','#e0a020','Waspada'],['normal','#40b060','Normal']].map(([,c,l]) =>
-        `<span style="display:flex;align-items:center;gap:var(--space-1);font-size:var(--text-xs);color:var(--color-text-muted)">
+        `<span style="display:flex;align-items:center;gap:var(--space-1);font-size:var(--text-xs);color:var(--text-muted)">
           <span style="width:10px;height:10px;border-radius:50%;background:${c};display:inline-block"></span>${l}
         </span>`).join('')}
     </div>`;
 }
 
 // ============================================================
-// 17. KIA PROGRESS BARS (in charts.js — rendered into #kia-progress)
+// 17. KIA PROGRESS BARS
 // ============================================================
 function renderKIAProgress() {
   const wrap = document.getElementById('kia-progress');
@@ -607,8 +607,8 @@ function renderKIAProgress() {
     return `
       <div style="margin-bottom:var(--space-4)">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:var(--space-1)">
-          <span style="font-size:var(--text-sm);font-weight:600;color:var(--color-text)">${item.label}</span>
-          <span style="font-size:var(--text-xs);color:var(--color-text-muted);font-variant-numeric:tabular-nums">${item.value}${item.unit} / target ${item.target}${item.unit}</span>
+          <span style="font-size:var(--text-sm);font-weight:600;color:var(--text)">${item.label}</span>
+          <span style="font-size:var(--text-xs);color:var(--text-muted);font-variant-numeric:tabular-nums">${item.value}${item.unit} / target ${item.target}${item.unit}</span>
         </div>
         <div style="height:8px;background:var(--surface-offset);border-radius:9999px;overflow:hidden">
           <div style="height:100%;width:${fill}%;background:${color};border-radius:9999px;transition:width 0.8s ease"></div>
