@@ -4,13 +4,25 @@
 
 'use strict';
 
-// ---- Shared colour palette ----
-const C_RED    = 'var(--danger)';
-const C_ORANGE = 'var(--warning)';
-const C_GREEN  = 'var(--success)';
-const C_BLUE   = 'var(--info)';
-const C_TEAL   = 'var(--primary)';
-const C_MUTED  = 'var(--text-muted)';
+// ---- Resolve CSS variables at runtime (canvas can't read var(--*)) ----
+function getCSSVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function colors() {
+  return {
+    red:     getCSSVar('--danger'),
+    orange:  getCSSVar('--warning'),
+    green:   getCSSVar('--success'),
+    blue:    getCSSVar('--info'),
+    teal:    getCSSVar('--primary'),
+    muted:   getCSSVar('--text-muted'),
+    text:    getCSSVar('--text'),
+    surface: getCSSVar('--surface'),
+    divider: getCSSVar('--divider'),
+    border:  getCSSVar('--border'),
+  };
+}
 
 // ============================================================
 // 1. TREN PENYAKIT (multi-line chart)
@@ -20,6 +32,7 @@ function renderTrenChart(selectedPenyakit = ['malaria']) {
   const ctx = document.getElementById('tren-chart');
   if (!ctx) return;
 
+  const c = colors();
   const d = DATA.trenMingguan;
   const colorMap = {
     malaria:   '#e05050',
@@ -54,12 +67,12 @@ function renderTrenChart(selectedPenyakit = ['malaria']) {
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 12 } } },
-        tooltip: { backgroundColor: 'var(--surface)', titleColor: 'var(--text)', bodyColor: 'var(--text-muted)', borderColor: 'var(--border)', borderWidth: 1 },
+        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 12 }, color: c.text } },
+        tooltip: { backgroundColor: c.surface, titleColor: c.text, bodyColor: c.muted, borderColor: c.border, borderWidth: 1 },
       },
       scales: {
-        x: { grid: { color: 'var(--divider)' }, ticks: { color: 'var(--text-muted)', font: { size: 11 } } },
-        y: { grid: { color: 'var(--divider)' }, ticks: { color: 'var(--text-muted)', font: { size: 11 } }, beginAtZero: false },
+        x: { grid: { color: c.divider }, ticks: { color: c.muted, font: { size: 11 } } },
+        y: { grid: { color: c.divider }, ticks: { color: c.muted, font: { size: 11 } }, beginAtZero: false },
       },
     },
   });
@@ -105,8 +118,9 @@ let borTrenChart = null;
 function renderBorTrenChart() {
   const ctx = document.getElementById('bor-tren-chart');
   if (!ctx) return;
+  const c = colors();
   const d = DATA.borData;
-  const colors = d.values.map(v => v >= d.threshold ? '#e05050cc' : v >= 75 ? '#e0a020cc' : '#40b060cc');
+  const barColors = d.values.map(v => v >= d.threshold ? '#e05050cc' : v >= 75 ? '#e0a020cc' : '#40b060cc');
 
   if (borTrenChart) borTrenChart.destroy();
   borTrenChart = new Chart(ctx, {
@@ -116,7 +130,7 @@ function renderBorTrenChart() {
       datasets: [{
         label: 'Rata-rata BOR (%)',
         data: d.values,
-        backgroundColor: colors,
+        backgroundColor: barColors,
         borderRadius: 4,
         borderSkipped: false,
       }, {
@@ -134,12 +148,12 @@ function renderBorTrenChart() {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 12 } } },
-        tooltip: { backgroundColor: 'var(--surface)', titleColor: 'var(--text)', bodyColor: 'var(--text-muted)', borderColor: 'var(--border)', borderWidth: 1 },
+        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 12 }, color: c.text } },
+        tooltip: { backgroundColor: c.surface, titleColor: c.text, bodyColor: c.muted, borderColor: c.border, borderWidth: 1 },
       },
       scales: {
-        x: { grid: { display: false }, ticks: { color: 'var(--text-muted)', font: { size: 11 } } },
-        y: { grid: { color: 'var(--divider)' }, ticks: { color: 'var(--text-muted)', font: { size: 11 } }, min: 0, max: 100 },
+        x: { grid: { display: false }, ticks: { color: c.muted, font: { size: 11 } } },
+        y: { grid: { color: c.divider }, ticks: { color: c.muted, font: { size: 11 } }, min: 0, max: 100 },
       },
     },
   });
@@ -152,6 +166,7 @@ let imuRadarChart = null;
 function renderImunisasiRadar(idx = 0) {
   const ctx = document.getElementById('imunisasi-radar');
   if (!ctx) return;
+  const c = colors();
   const row = DATA.imunisasi[idx];
   if (!row) return;
 
@@ -163,15 +178,15 @@ function renderImunisasiRadar(idx = 0) {
       datasets: [{
         label: row.kabupaten,
         data: [row.bcg, row.polio, row.dpt, row.campak, row.hb0],
-        backgroundColor: C_TEAL + '33',
-        borderColor: C_TEAL,
-        pointBackgroundColor: C_TEAL,
+        backgroundColor: c.teal + '33',
+        borderColor: c.teal,
+        pointBackgroundColor: c.teal,
         borderWidth: 2,
       }, {
         label: 'Target (80%)',
         data: [80, 80, 80, 80, 80],
         backgroundColor: 'transparent',
-        borderColor: C_ORANGE + '88',
+        borderColor: c.orange + '88',
         borderWidth: 1.5,
         borderDash: [5, 3],
         pointRadius: 0,
@@ -183,14 +198,14 @@ function renderImunisasiRadar(idx = 0) {
       scales: {
         r: {
           min: 0, max: 100,
-          ticks: { stepSize: 25, backdropColor: 'transparent', color: 'var(--text-muted)', font: { size: 10 } },
-          grid: { color: 'var(--divider)' },
-          pointLabels: { color: 'var(--text)', font: { size: 11 } },
+          ticks: { stepSize: 25, backdropColor: 'transparent', color: c.muted, font: { size: 10 } },
+          grid: { color: c.divider },
+          pointLabels: { color: c.text, font: { size: 11 } },
         },
       },
       plugins: {
-        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 12 } } },
-        tooltip: { backgroundColor: 'var(--surface)', titleColor: 'var(--text)', bodyColor: 'var(--text-muted)', borderColor: 'var(--border)', borderWidth: 1 },
+        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 12 }, color: c.text } },
+        tooltip: { backgroundColor: c.surface, titleColor: c.text, bodyColor: c.muted, borderColor: c.border, borderWidth: 1 },
       },
     },
   });
@@ -214,7 +229,8 @@ let giziChart = null;
 function renderGiziChart() {
   const ctx = document.getElementById('gizi-scatter');
   if (!ctx) return;
-  const colorFn = s => s === 'critical' ? C_RED : s === 'warning' ? C_ORANGE : C_GREEN;
+  const c = colors();
+  const colorFn = s => s === 'critical' ? c.red : s === 'warning' ? c.orange : c.green;
 
   if (giziChart) giziChart.destroy();
   giziChart = new Chart(ctx, {
@@ -234,7 +250,7 @@ function renderGiziChart() {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: 'var(--surface)', titleColor: 'var(--text)', bodyColor: 'var(--text-muted)', borderColor: 'var(--border)', borderWidth: 1,
+          backgroundColor: c.surface, titleColor: c.text, bodyColor: c.muted, borderColor: c.border, borderWidth: 1,
           callbacks: {
             title: items => items[0].raw.label,
             label: item => `Stunting: ${item.raw.x}% | Wasting: ${item.raw.y}%`,
@@ -242,8 +258,8 @@ function renderGiziChart() {
         },
       },
       scales: {
-        x: { title: { display: true, text: 'Stunting (%)', color: 'var(--text-muted)', font: { size: 11 } }, grid: { color: 'var(--divider)' }, ticks: { color: 'var(--text-muted)', font: { size: 11 } } },
-        y: { title: { display: true, text: 'Wasting (%)', color: 'var(--text-muted)', font: { size: 11 } }, grid: { color: 'var(--divider)' }, ticks: { color: 'var(--text-muted)', font: { size: 11 } } },
+        x: { title: { display: true, text: 'Stunting (%)', color: c.muted, font: { size: 11 } }, grid: { color: c.divider }, ticks: { color: c.muted, font: { size: 11 } } },
+        y: { title: { display: true, text: 'Wasting (%)', color: c.muted, font: { size: 11 } }, grid: { color: c.divider }, ticks: { color: c.muted, font: { size: 11 } } },
       },
     },
   });
@@ -256,6 +272,7 @@ let nakesChart = null;
 function renderNakesChart() {
   const ctx = document.getElementById('nakes-chart');
   if (!ctx) return;
+  const c = colors();
   const rows = DATA.nakes.slice().sort((a, b) => (a.dokter + a.perawat + a.bidan) - (b.dokter + b.perawat + b.bidan));
 
   if (nakesChart) nakesChart.destroy();
@@ -274,12 +291,12 @@ function renderNakesChart() {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 12 } } },
-        tooltip: { backgroundColor: 'var(--surface)', titleColor: 'var(--text)', bodyColor: 'var(--text-muted)', borderColor: 'var(--border)', borderWidth: 1 },
+        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 12 }, color: c.text } },
+        tooltip: { backgroundColor: c.surface, titleColor: c.text, bodyColor: c.muted, borderColor: c.border, borderWidth: 1 },
       },
       scales: {
-        x: { stacked: true, grid: { color: 'var(--divider)' }, ticks: { color: 'var(--text-muted)', font: { size: 11 } } },
-        y: { stacked: true, grid: { display: false }, ticks: { color: 'var(--text-muted)', font: { size: 11 } } },
+        x: { stacked: true, grid: { color: c.divider }, ticks: { color: c.muted, font: { size: 11 } } },
+        y: { stacked: true, grid: { display: false }, ticks: { color: c.muted, font: { size: 11 } } },
       },
     },
   });
@@ -292,6 +309,7 @@ let laporanChart = null;
 function renderLaporanChart() {
   const ctx = document.getElementById('laporan-chart');
   if (!ctx) return;
+  const c = colors();
   const d = DATA.laporan;
 
   if (laporanChart) laporanChart.destroy();
@@ -303,7 +321,7 @@ function renderLaporanChart() {
         data: [d.terkirim - d.terlambat, d.terlambat, d.belumLapor],
         backgroundColor: ['#40b060cc', '#e0a020cc', '#e05050cc'],
         borderWidth: 2,
-        borderColor: 'var(--surface)',
+        borderColor: c.surface,
       }],
     },
     options: {
@@ -311,8 +329,8 @@ function renderLaporanChart() {
       maintainAspectRatio: false,
       cutout: '65%',
       plugins: {
-        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 12 } } },
-        tooltip: { backgroundColor: 'var(--surface)', titleColor: 'var(--text)', bodyColor: 'var(--text-muted)', borderColor: 'var(--border)', borderWidth: 1 },
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 12 }, color: c.text } },
+        tooltip: { backgroundColor: c.surface, titleColor: c.text, bodyColor: c.muted, borderColor: c.border, borderWidth: 1 },
       },
     },
   });
@@ -347,12 +365,13 @@ function renderSurveilansTable(filter = '') {
 function renderStokObat(filter = 'semua') {
   const tbody = document.getElementById('stok-tbody');
   if (!tbody) return;
+  const c = colors();
   const rows = filter === 'semua'
     ? DATA.stokObat
     : DATA.stokObat.filter(r => r.status === filter);
   tbody.innerHTML = rows.map(r => {
     const pct = Math.round((r.stok / r.minimum) * 100);
-    const barColor = r.status === 'critical' ? C_RED : r.status === 'warning' ? C_ORANGE : C_GREEN;
+    const barColor = r.status === 'critical' ? c.red : r.status === 'warning' ? c.orange : c.green;
     const fillPct = Math.min(100, pct);
     return `
     <tr>
@@ -377,8 +396,9 @@ function renderStokObat(filter = 'semua') {
 function renderBORTable() {
   const tbody = document.getElementById('bor-tbody');
   if (!tbody) return;
+  const c = colors();
   tbody.innerHTML = DATA.bor.map(r => {
-    const barColor = r.status === 'critical' ? C_RED : r.status === 'warning' ? C_ORANGE : C_GREEN;
+    const barColor = r.status === 'critical' ? c.red : r.status === 'warning' ? c.orange : c.green;
     return `
     <tr>
       <td>${r.rs}</td>
@@ -403,10 +423,11 @@ function renderBORTable() {
 function renderRujukan() {
   const tbody = document.getElementById('rujukan-tbody');
   if (!tbody) return;
+  const c = colors();
   const statusMap = {
-    'dalam-perjalanan': { label: 'Dalam Perjalanan', color: 'var(--info)' },
-    'tiba':             { label: 'Tiba di RS Tujuan', color: 'var(--success)' },
-    'selesai':          { label: 'Selesai',            color: 'var(--text-muted)' },
+    'dalam-perjalanan': { label: 'Dalam Perjalanan', color: c.blue },
+    'tiba':             { label: 'Tiba di RS Tujuan', color: c.green },
+    'selesai':          { label: 'Selesai',            color: c.muted },
   };
   tbody.innerHTML = DATA.rujukan.map(r => {
     const s = statusMap[r.status] || { label: r.status, color: 'inherit' };
@@ -430,10 +451,11 @@ function renderRujukan() {
 function renderImunisasiTable() {
   const tbody = document.getElementById('imunisasi-tbody');
   if (!tbody) return;
+  const c = colors();
   tbody.innerHTML = DATA.imunisasi.map(r => {
     const cols = ['bcg','polio','dpt','campak','hb0'].map(k => {
       const v = r[k];
-      const color = v >= 80 ? 'var(--success)' : v >= 60 ? 'var(--warning)' : 'var(--danger)';
+      const color = v >= 80 ? c.green : v >= 60 ? c.orange : c.red;
       return `<td class="num" style="color:${color};font-variant-numeric:tabular-nums">${v}%</td>`;
     }).join('');
     return `<tr><td>${r.kabupaten}</td>${cols}<td><span class="badge badge-${r.status}">${r.status === 'critical' ? 'Kritis' : r.status === 'warning' ? 'Waspada' : 'Normal'}</span></td></tr>`;
@@ -446,9 +468,10 @@ function renderImunisasiTable() {
 function renderGiziTable() {
   const tbody = document.getElementById('gizi-tbody');
   if (!tbody) return;
+  const c = colors();
   tbody.innerHTML = DATA.gizi.map(r => {
     const col = (v, warn, crit) => {
-      const color = v >= crit ? 'var(--danger)' : v >= warn ? 'var(--warning)' : 'var(--success)';
+      const color = v >= crit ? c.red : v >= warn ? c.orange : c.green;
       return `<td class="num" style="color:${color};font-variant-numeric:tabular-nums">${v}%</td>`;
     };
     return `<tr>
@@ -487,6 +510,7 @@ function renderNakesTable() {
 function renderKIASummary() {
   const wrap = document.getElementById('kia-summary');
   if (!wrap) return;
+  const c = colors();
   const items = [
     { key: 'aki' }, { key: 'akb' }, { key: 'anc4' },
     { key: 'persalinan' }, { key: 'kn2' }, { key: 'kb' },
@@ -496,11 +520,11 @@ function renderKIASummary() {
     const item = kia[key];
     if (!item) return '';
     const ok = item.higherIsBetter ? item.value >= item.target : item.value <= item.target;
-    const color = ok ? 'var(--success)' : 'var(--danger)';
+    const color = ok ? c.green : c.red;
     const arrow = item.higherIsBetter
       ? (item.value >= item.target ? '↑' : '↓')
       : (item.value <= item.target ? '↓' : '↑');
-    const arrowColor = ok ? 'var(--success)' : 'var(--danger)';
+    const arrowColor = ok ? c.green : c.red;
     return `
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-4);">
         <div style="font-size:var(--text-xs);color:var(--text-muted);margin-bottom:var(--space-1)">${item.label}</div>
@@ -546,11 +570,11 @@ function renderPeta() {
     const cx = Math.round(p.x * W / 100);
     const cy = Math.round(p.y * H / 100);
     const r  = Math.max(8, Math.min(22, Math.round(p.kasus / 8)));
-    const c  = colorMap[p.status];
+    const col = colorMap[p.status];
     return `
       <g class="peta-bubble" style="cursor:pointer" role="button" tabindex="0" aria-label="${p.label}: ${p.kasus} kasus">
-        <circle cx="${cx}" cy="${cy}" r="${r}" fill="${c}" fill-opacity="0.25" stroke="${c}" stroke-width="1.5"/>
-        <circle cx="${cx}" cy="${cy}" r="3" fill="${c}"/>
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="${col}" fill-opacity="0.25" stroke="${col}" stroke-width="1.5"/>
+        <circle cx="${cx}" cy="${cy}" r="3" fill="${col}"/>
         <text x="${cx}" y="${cy - r - 4}" text-anchor="middle"
               font-size="10" fill="var(--text-muted)" font-family="inherit">${p.label}</text>
       </g>`;
@@ -564,9 +588,9 @@ function renderPeta() {
       ${bubbles}
     </svg>
     <div style="display:flex;gap:var(--space-4);margin-top:var(--space-3);flex-wrap:wrap">
-      ${[['critical','#e05050','Kritis'],['warning','#e0a020','Waspada'],['normal','#40b060','Normal']].map(([,c,l]) =>
+      ${[['critical','#e05050','Kritis'],['warning','#e0a020','Waspada'],['normal','#40b060','Normal']].map(([,col,l]) =>
         `<span style="display:flex;align-items:center;gap:var(--space-1);font-size:var(--text-xs);color:var(--text-muted)">
-          <span style="width:10px;height:10px;border-radius:50%;background:${c};display:inline-block"></span>${l}
+          <span style="width:10px;height:10px;border-radius:50%;background:${col};display:inline-block"></span>${l}
         </span>`).join('')}
     </div>`;
 }
@@ -577,6 +601,7 @@ function renderPeta() {
 function renderKIAProgress() {
   const wrap = document.getElementById('kia-progress');
   if (!wrap) return;
+  const c = colors();
 
   const items = [
     { key: 'aki',        higherIsBetter: false },
@@ -594,7 +619,7 @@ function renderKIAProgress() {
     const pct   = Math.min(100, Math.round((item.value / item.target) * 100));
     const ok    = higherIsBetter ? item.value >= item.target : item.value <= item.target;
     const warn  = higherIsBetter ? pct >= 75 : pct <= 130;
-    const color = ok ? C_GREEN : warn ? C_ORANGE : C_RED;
+    const color = ok ? c.green : warn ? c.orange : c.red;
     const fill  = higherIsBetter
       ? Math.min(100, pct)
       : item.value <= item.target
@@ -611,6 +636,19 @@ function renderKIAProgress() {
         </div>
       </div>`;
   }).join('');
+}
+
+// ============================================================
+// REINIT — dipanggil ulang saat theme toggle agar canvas
+// mengambil warna baru dari computed CSS variables
+// ============================================================
+function reinitCharts() {
+  if (trenChart)     { const sel = [...document.querySelectorAll('#tren-filter .pill.active')].map(b => b.dataset.key); renderTrenChart(sel.length ? sel : ['malaria']); }
+  if (borTrenChart)  renderBorTrenChart();
+  if (imuRadarChart) renderImunisasiRadar(+document.getElementById('imunisasi-radar-select')?.value || 0);
+  if (giziChart)     renderGiziChart();
+  if (nakesChart)    renderNakesChart();
+  if (laporanChart)  renderLaporanChart();
 }
 
 // ============================================================
