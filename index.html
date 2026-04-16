@@ -184,7 +184,6 @@ body.dashboard-active { overflow: hidden; }
   margin-bottom: 1.75rem;
 }
 
-/* Error banner */
 .lp-err {
   display: none;
   align-items: center;
@@ -203,7 +202,6 @@ body.dashboard-active { overflow: hidden; }
   animation: lp-shake .4s cubic-bezier(.36,.07,.19,.97) both;
 }
 
-/* Fields */
 .lp-field { margin-bottom: 1.2rem; }
 .lp-label {
   display: block;
@@ -259,7 +257,6 @@ body.dashboard-active { overflow: hidden; }
 }
 .lp-pw-btn:hover { color: var(--text-muted); }
 
-/* Remember / forgot */
 .lp-opts {
   display: flex;
   align-items: center;
@@ -308,7 +305,6 @@ body.dashboard-active { overflow: hidden; }
 }
 .lp-forgot:hover { opacity: .7; }
 
-/* Submit button */
 .lp-btn {
   width: 100%;
   padding: .875rem 1.5rem;
@@ -345,7 +341,6 @@ body.dashboard-active { overflow: hidden; }
 .lp-btn.loading .lp-btn-txt { opacity: .5; }
 .lp-btn.loading .lp-spinner { display: block; }
 
-/* Hint box */
 .lp-hint {
   margin-top: 1.5rem;
   padding: .8rem 1rem;
@@ -365,7 +360,6 @@ body.dashboard-active { overflow: hidden; }
   border-radius: 3px;
 }
 
-/* Success flash overlay */
 #lp-success {
   position: fixed;
   inset: 0;
@@ -389,14 +383,12 @@ body.dashboard-active { overflow: hidden; }
   animation: lp-pop .4s cubic-bezier(.16,1,.3,1) both;
 }
 
-/* Animations */
 @keyframes lp-down  { from { opacity:0; transform:translateY(-14px) } to { opacity:1; transform:none } }
 @keyframes lp-up    { from { opacity:0; transform:translateY(14px)  } to { opacity:1; transform:none } }
 @keyframes lp-shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
 @keyframes lp-spin  { to { transform:rotate(360deg) } }
 @keyframes lp-pop   { from{transform:scale(.4);opacity:0} to{transform:scale(1);opacity:1} }
 
-/* Responsive */
 @media (max-width: 768px) {
   .lp-wrap { grid-template-columns: 1fr; }
   .lp-brand { padding: 2rem 1.5rem; min-height: auto; }
@@ -405,22 +397,15 @@ body.dashboard-active { overflow: hidden; }
   .lp-form-panel { padding: 2rem 1.25rem; }
 }
 
-/* ════════════════════════════════════════════════════
-   DASHBOARD PAGE — full height shell
-   ════════════════════════════════════════════════════ */
 #page-dashboard {
   display: none;
   height: 100dvh;
   overflow: hidden;
 }
 #page-dashboard.active { display: block; }
-
-/* dashboard.css handles .app-shell, .sidebar, .main-area, .content-area */
 </style>
 </head>
 <body>
-
-<!-- SUCCESS FLASH -->
 <div id="lp-success">
   <div class="lp-check">
     <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -429,15 +414,11 @@ body.dashboard-active { overflow: hidden; }
   </div>
 </div>
 
-<!-- ══════════════════ LOGIN PAGE ══════════════════ -->
 <div id="page-login" class="active">
   <div class="lp-wrap">
-
-    <!-- LEFT: Brand -->
     <div class="lp-brand">
       <div class="lp-brand-top">
         <div class="lp-logos">
-          <!-- Kemenkes RI logo — inline SVG -->
           <div class="lp-logo-box" title="Kementerian Kesehatan RI">
             <svg width="30" height="30" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="20" y="4" width="8" height="40" rx="3" fill="white"/>
@@ -449,7 +430,6 @@ body.dashboard-active { overflow: hidden; }
             </svg>
           </div>
           <div class="lp-div"></div>
-          <!-- SIKESPA monogram — inline SVG -->
           <div class="lp-logo-box" title="SIKESPA">
             <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
               <rect width="28" height="28" rx="6" fill="rgba(255,255,255,0.15)"/>
@@ -479,7 +459,6 @@ body.dashboard-active { overflow: hidden; }
       </div>
     </div>
 
-    <!-- RIGHT: Form -->
     <div class="lp-form-panel">
       <button class="lp-theme-btn" id="lp-theme-btn" aria-label="Ganti tema">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -499,7 +478,6 @@ body.dashboard-active { overflow: hidden; }
         </div>
 
         <form id="lp-form" novalidate>
-          <!-- Username -->
           <div class="lp-field">
             <label class="lp-label" for="lp-username">Username</label>
             <div class="lp-input-wrap">
@@ -513,7 +491,6 @@ body.dashboard-active { overflow: hidden; }
             </div>
           </div>
 
-          <!-- Password -->
           <div class="lp-field">
             <label class="lp-label" for="lp-password">Password</label>
             <div class="lp-input-wrap">
@@ -533,7 +510,6 @@ body.dashboard-active { overflow: hidden; }
             </div>
           </div>
 
-          <!-- Options -->
           <div class="lp-opts">
             <label class="lp-remember">
               <input type="checkbox" class="lp-chk" id="lp-remember"> Ingat saya
@@ -557,21 +533,14 @@ body.dashboard-active { overflow: hidden; }
         </div>
       </div>
     </div>
-
   </div>
 </div>
-<!-- ══════════════ END LOGIN ══════════════ -->
 
-
-<!-- ══════════════════ DASHBOARD PAGE ══════════════════ -->
 <div id="page-dashboard">
 <div class="app-shell">
-
-  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar" aria-label="Navigasi Utama">
     <div class="sidebar-header">
       <a href="#" class="sidebar-logo" aria-label="SIKESPA Home">
-        <!-- inline SVG logo -->
         <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
           <rect width="32" height="32" rx="8" fill="var(--primary)"/>
           <path d="M16 7v18M7 16h18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
@@ -610,19 +579,13 @@ body.dashboard-active { overflow: hidden; }
     </div>
   </aside>
 
-  <!-- MAIN AREA — matches dashboard.css .main-area -->
   <div class="main-area">
     <header class="topbar" id="topbar"></header>
-    <!-- content-area — matches dashboard.css .content-area -->
     <main class="content-area" id="content-area" tabindex="-1"></main>
   </div>
-
 </div>
 </div>
-<!-- ══════════════ END DASHBOARD ══════════════ -->
 
-
-<!-- ══════════════ PAGE TEMPLATES ══════════════ -->
 <template id="tpl-beranda">
   <div class="sub-page active">
     <div class="kpi-grid" id="kpi-grid"></div>
@@ -640,6 +603,17 @@ body.dashboard-active { overflow: hidden; }
           <span class="section-badge" id="alert-count">0</span>
         </div>
         <div class="section-card-body" id="alert-list"></div>
+      </section>
+      <section class="section-card col-span-2">
+        <div class="section-card-head">
+          <h2 class="section-title">Tren Penyakit — 12 Minggu Terakhir</h2>
+          <div id="tren-filter" class="pill-group"></div>
+        </div>
+        <div class="section-card-body chart-wrap" style="height:280px"><canvas id="tren-chart"></canvas></div>
+      </section>
+      <section class="section-card">
+        <div class="section-card-head"><h2 class="section-title">Ringkasan BOR</h2></div>
+        <div class="section-card-body"><div id="bor-summary"></div></div>
       </section>
     </div>
   </div>
@@ -846,20 +820,13 @@ body.dashboard-active { overflow: hidden; }
   </div>
 </template>
 
-
-<!-- ══════════════ SCRIPTS ══════════════ -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="js/data.js"></script>
 <script src="js/charts.js"></script>
 <script>
 'use strict';
-
-// ── Dynamic year ──────────────────────────────────────────────
 document.getElementById('lp-year').textContent = new Date().getFullYear();
 
-// ════════════════════════════════════════════════════════════════
-// THEME
-// ════════════════════════════════════════════════════════════════
 (function () {
   const html = document.documentElement;
   let theme = matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
@@ -884,9 +851,6 @@ document.getElementById('lp-year').textContent = new Date().getFullYear();
   });
 })();
 
-// ════════════════════════════════════════════════════════════════
-// AUTH
-// ════════════════════════════════════════════════════════════════
 const USERS = [
   { username: 'admin',    password: 'sikespa2024', name: 'Administrator',   initials: 'AD' },
   { username: 'kadinkes', password: 'dinkes2024',  name: 'Kepala Dinkes',   initials: 'KD' },
@@ -894,10 +858,12 @@ const USERS = [
 ];
 
 let currentUser = null;
+let currentPage = 'beranda';
 
-// ════════════════════════════════════════════════════════════════
-// LOGIN LOGIC
-// ════════════════════════════════════════════════════════════════
+function icon(paths, size = 18) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const form    = document.getElementById('lp-form');
   const uEl     = document.getElementById('lp-username');
@@ -910,11 +876,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const remEl   = document.getElementById('lp-remember');
   const overlay = document.getElementById('lp-success');
 
-  // Restore remembered username
   const mem = sessionStorage.getItem('sikespa_u');
   if (mem) { uEl.value = mem; remEl.checked = true; }
 
-  // Password toggle
   pwBtn.addEventListener('click', () => {
     const isText = pEl.type === 'text';
     pEl.type = isText ? 'password' : 'text';
@@ -923,7 +887,6 @@ document.addEventListener('DOMContentLoaded', () => {
       : `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`;
   });
 
-  // Clear errors on typing
   [uEl, pEl].forEach(el => el.addEventListener('input', () => {
     el.classList.remove('err');
     errEl.classList.remove('show');
@@ -970,11 +933,15 @@ document.addEventListener('DOMContentLoaded', () => {
     enterDashboard(user);
     overlay.classList.remove('show');
   });
+
+  window.addEventListener('hashchange', () => {
+    if (!document.body.classList.contains('dashboard-active')) return;
+    const hash = location.hash.replace('#', '') || 'beranda';
+    const valid = NAV_ITEMS.find(n => n.id === hash) ? hash : 'beranda';
+    if (valid !== currentPage) navigateTo(valid, { updateHash: false });
+  });
 });
 
-// ════════════════════════════════════════════════════════════════
-// ENTER / EXIT DASHBOARD
-// ════════════════════════════════════════════════════════════════
 function enterDashboard(user) {
   const loginEl = document.getElementById('page-login');
   const dashEl  = document.getElementById('page-dashboard');
@@ -993,7 +960,6 @@ function enterDashboard(user) {
     requestAnimationFrame(() => { dashEl.style.opacity = '1'; });
   }, 240);
 
-  // Populate sidebar user
   const av = document.getElementById('sb-avatar');
   const nm = document.getElementById('sb-name');
   if (av) av.textContent = user.initials;
@@ -1004,7 +970,6 @@ function enterDashboard(user) {
   const hash  = location.hash.replace('#', '') || 'beranda';
   const valid = NAV_ITEMS.find(n => n.id === hash) ? hash : 'beranda';
   navigateTo(valid);
-  setTimeout(() => { if (typeof initCharts === 'function') initCharts(); }, 200);
 }
 
 function logout() {
@@ -1027,34 +992,23 @@ function logout() {
 
     const pEl = document.getElementById('lp-password');
     if (pEl) pEl.value = '';
+    history.replaceState(null, '', '#');
   }, 210);
 }
 
-// ════════════════════════════════════════════════════════════════
-// NAV CONFIG
-// ════════════════════════════════════════════════════════════════
 const NAV_ITEMS = [
   { id: 'beranda',    label: 'Beranda',           icon: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>' },
-  { id: 'surveilans', label: 'Surveilans',         icon: '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>' },
+  { id: 'surveilans', label: 'Surveilans',        icon: '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>' },
   { id: 'obat',       label: 'Obat & Logistik',   icon: '<path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>' },
-  { id: 'kapasitas',  label: 'Kapasitas RS',       icon: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/>' },
-  { id: 'rujukan',    label: 'Rujukan',            icon: '<path d="M5 12h14M12 5l7 7-7 7"/>' },
+  { id: 'kapasitas',  label: 'Kapasitas RS',      icon: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/>' },
+  { id: 'rujukan',    label: 'Rujukan',           icon: '<path d="M5 12h14M12 5l7 7-7 7"/>' },
   { id: 'kia',        label: 'KIA',               icon: '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>' },
-  { id: 'imunisasi',  label: 'Imunisasi',          icon: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' },
-  { id: 'gizi',       label: 'Gizi',               icon: '<path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>' },
-  { id: 'nakes',      label: 'Tenaga Kesehatan',   icon: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' },
-  { id: 'laporan',    label: 'Laporan',            icon: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>' },
+  { id: 'imunisasi',  label: 'Imunisasi',         icon: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' },
+  { id: 'gizi',       label: 'Gizi',              icon: '<path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>' },
+  { id: 'nakes',      label: 'Tenaga Kesehatan',  icon: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' },
+  { id: 'laporan',    label: 'Laporan',           icon: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>' },
 ];
 
-let currentPage = 'beranda';
-
-function icon(paths, size = 18) {
-  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
-}
-
-// ════════════════════════════════════════════════════════════════
-// SIDEBAR RENDER
-// ════════════════════════════════════════════════════════════════
 function renderSidebar() {
   const nav = document.getElementById('sidebar-nav');
   if (!nav) return;
@@ -1070,14 +1024,23 @@ function renderSidebar() {
 }
 
 function initSidebarToggle() {
-  document.getElementById('sidebar-toggle')?.addEventListener('click', () => {
-    document.getElementById('sidebar')?.classList.toggle('collapsed');
-  });
+  const sidebar = document.getElementById('sidebar');
+  const staticToggle = document.getElementById('sidebar-toggle');
+  if (staticToggle && !staticToggle.dataset.bound) {
+    staticToggle.addEventListener('click', () => sidebar?.classList.toggle('collapsed'));
+    staticToggle.dataset.bound = 'true';
+  }
 }
 
-// ════════════════════════════════════════════════════════════════
-// TOPBAR
-// ════════════════════════════════════════════════════════════════
+function bindTopbarMenu() {
+  const btn = document.getElementById('topbar-menu');
+  const sidebar = document.getElementById('sidebar');
+  if (btn && !btn.dataset.bound) {
+    btn.addEventListener('click', () => sidebar?.classList.toggle('collapsed'));
+    btn.dataset.bound = 'true';
+  }
+}
+
 function renderTopbar(label) {
   const bar = document.getElementById('topbar');
   if (!bar) return;
@@ -1103,14 +1066,9 @@ function renderTopbar(label) {
         onmouseout="this.style.background='var(--danger-light)';this.style.color='var(--danger)';"
       >${icon('<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>', 14)} Keluar</button>
     </div>`;
-  document.getElementById('topbar-menu')?.addEventListener('click', () => {
-    document.getElementById('sidebar')?.classList.toggle('collapsed');
-  });
+  bindTopbarMenu();
 }
 
-// ════════════════════════════════════════════════════════════════
-// KPI
-// ════════════════════════════════════════════════════════════════
 function renderKPI() {
   const grid = document.getElementById('kpi-grid');
   if (!grid || typeof DATA === 'undefined') return;
@@ -1139,9 +1097,6 @@ function renderKPI() {
   }).join('');
 }
 
-// ════════════════════════════════════════════════════════════════
-// ALERTS
-// ════════════════════════════════════════════════════════════════
 function renderAlerts() {
   const list  = document.getElementById('alert-list');
   const badge = document.getElementById('alert-count');
@@ -1158,9 +1113,6 @@ function renderAlerts() {
     </div>`).join('');
 }
 
-// ════════════════════════════════════════════════════════════════
-// BOR SUMMARY
-// ════════════════════════════════════════════════════════════════
 function renderBORSummary() {
   const wrap = document.getElementById('bor-summary');
   if (!wrap || typeof DATA === 'undefined') return;
@@ -1178,14 +1130,12 @@ function renderBORSummary() {
     </div>`;
 }
 
-// ════════════════════════════════════════════════════════════════
-// ROUTER
-// ════════════════════════════════════════════════════════════════
 const PAGE_INIT = {
-  beranda:    () => { renderKPI(); renderAlerts(); renderPeta(); },
+  beranda:    () => { renderKPI(); renderAlerts(); renderPeta(); renderTrenFilter(); renderTrenChart(['malaria']); renderBORSummary(); },
   surveilans: () => {
     renderSurveilansTable();
     renderTrenFilter();
+    renderTrenChart(['malaria']);
     document.getElementById('surveilans-filter')?.querySelectorAll('.pill').forEach(b => {
       b.addEventListener('click', () => {
         document.getElementById('surveilans-filter').querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
@@ -1218,7 +1168,8 @@ const PAGE_INIT = {
   },
 };
 
-function navigateTo(pageId) {
+function navigateTo(pageId, options = {}) {
+  const { updateHash = true } = options;
   currentPage = pageId;
   const tpl  = document.getElementById(`tpl-${pageId}`);
   const main = document.getElementById('content-area');
@@ -1230,7 +1181,7 @@ function navigateTo(pageId) {
   if (nav) renderTopbar(nav.label);
   renderSidebar();
   PAGE_INIT[pageId]?.();
-  history.replaceState(null, '', `#${pageId}`);
+  if (updateHash) history.replaceState(null, '', `#${pageId}`);
 }
 </script>
 </body>
