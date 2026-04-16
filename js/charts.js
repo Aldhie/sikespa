@@ -488,12 +488,8 @@ function renderKIASummary() {
   const wrap = document.getElementById('kia-summary');
   if (!wrap) return;
   const items = [
-    { key: 'aki',        icon: '⚠️' },
-    { key: 'akb',        icon: '⚠️' },
-    { key: 'anc4',       icon: '📈' },
-    { key: 'persalinan', icon: '📈' },
-    { key: 'kn2',        icon: '📈' },
-    { key: 'kb',         icon: '📈' },
+    { key: 'aki' }, { key: 'akb' }, { key: 'anc4' },
+    { key: 'persalinan' }, { key: 'kn2' }, { key: 'kb' },
   ];
   const kia = DATA.kia;
   wrap.innerHTML = items.map(({ key }) => {
@@ -615,4 +611,27 @@ function renderKIAProgress() {
         </div>
       </div>`;
   }).join('');
+}
+
+// ============================================================
+// INIT — entry point dipanggil index.html setelah DOM ready
+// ============================================================
+function initCharts() {
+  renderTrenFilter();
+  renderBorTrenChart();
+  renderPeta();
+  renderSurveilansTable();
+  renderStokObat();
+  renderBORTable();
+  renderRujukan();
+  renderImunisasiTable();
+  renderImunisasiRadarDropdown();
+  renderGiziChart();
+  renderGiziTable();
+  renderNakesChart();
+  renderNakesTable();
+  renderKIASummary();
+  renderKIAProgress();
+  renderLaporanChart();
+  renderLaporanDetail();
 }
