@@ -2,3 +2,625 @@
 <html lang="id" data-theme="light">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIKESPA — Sistem Informasi Kesehatan Papua</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar" id="sidebar" aria-label="Navigasi Utama">
+    <div class="sidebar-header">
+      <a href="#" class="sidebar-logo" aria-label="SIKESPA Home">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <rect width="32" height="32" rx="8" fill="var(--color-primary)"/>
+          <path d="M16 7v18M7 16h18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="16" cy="16" r="5" stroke="white" stroke-width="1.5" fill="none"/>
+        </svg>
+        <span class="logo-text">SIKESPA</span>
+      </a>
+      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar" aria-expanded="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+    </div>
+    <div class="sidebar-province">
+      <span class="province-badge">Provinsi Papua</span>
+      <span class="province-sub">29 Kabupaten/Kota</span>
+    </div>
+    <nav class="sidebar-nav" id="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <button class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <span>Ganti Tema</span>
+      </button>
+      <div class="sidebar-user">
+        <div class="user-avatar">KD</div>
+        <div class="user-info">
+          <span class="user-name">Kepala Dinkes</span>
+          <span class="user-role">Provinsi Papua</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===================== MAIN CONTENT ===================== -->
+  <div class="main-wrapper">
+    <header class="topbar" id="topbar"></header>
+    <main class="main-content" id="main-content" tabindex="-1">
+      <!-- Content injected by JS router -->
+    </main>
+  </div>
+
+</div><!-- /.app-shell -->
+
+<!-- ===================== PAGE TEMPLATES ===================== -->
+
+<!-- TEMPLATE: Beranda -->
+<template id="tpl-beranda">
+  <div class="page">
+    <div class="kpi-grid" id="kpi-grid"></div>
+    <div class="content-grid">
+      <section class="section-card col-span-2">
+        <div class="section-card-head">
+          <h2 class="section-title">Peta Sebaran Penyakit</h2>
+          <span class="section-subtitle">Klik kabupaten untuk detail</span>
+        </div>
+        <div class="section-card-body" id="peta-wrap"></div>
+      </section>
+      <section class="section-card">
+        <div class="section-card-head">
+          <h2 class="section-title">Alert Aktif</h2>
+          <span class="section-badge" id="alert-count">0</span>
+        </div>
+        <div class="section-card-body" id="alert-list"></div>
+      </section>
+    </div>
+  </div>
+</template>
+
+<!-- TEMPLATE: Surveilans -->
+<template id="tpl-surveilans">
+  <div class="page">
+    <div class="content-grid">
+      <section class="section-card col-span-3">
+        <div class="section-card-head">
+          <h2 class="section-title">Tren Penyakit — 12 Minggu Terakhir</h2>
+          <div id="tren-filter" class="pill-group"></div>
+        </div>
+        <div class="section-card-body chart-wrap" style="height:280px">
+          <canvas id="tren-chart"></canvas>
+        </div>
+      </section>
+      <section class="section-card col-span-3">
+        <div class="section-card-head">
+          <h2 class="section-title">Kasus per Kabupaten</h2>
+          <div class="filter-group" id="surveilans-filter">
+            <button class="pill active" data-filter="">Semua</button>
+            <button class="pill" data-filter="critical">Kritis</button>
+            <button class="pill" data-filter="warning">Waspada</button>
+            <button class="pill" data-filter="normal">Normal</button>
+          </div>
+        </div>
+        <div class="section-card-body table-wrap">
+          <table class="data-table">
+            <thead><tr>
+              <th>Kabupaten</th>
+              <th class="num">Malaria</th>
+              <th class="num">TBC</th>
+              <th class="num">DBD</th>
+              <th class="num">Diare</th>
+              <th class="num">Pneumonia</th>
+              <th class="num">Total</th>
+              <th>Status</th>
+            </tr></thead>
+            <tbody id="surveilans-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</template>
+
+<!-- TEMPLATE: Obat & Logistik -->
+<template id="tpl-obat">
+  <div class="page">
+    <div class="content-grid">
+      <section class="section-card col-span-3">
+        <div class="section-card-head">
+          <h2 class="section-title">Stok Obat Esensial</h2>
+          <div class="filter-group" id="stok-filter">
+            <button class="pill active" data-filter="semua">Semua</button>
+            <button class="pill" data-filter="critical">Kritis</button>
+            <button class="pill" data-filter="warning">Waspada</button>
+            <button class="pill" data-filter="normal">Normal</button>
+          </div>
+        </div>
+        <div class="section-card-body table-wrap">
+          <table class="data-table">
+            <thead><tr>
+              <th>Kabupaten</th>
+              <th>Obat</th>
+              <th class="num">Stok Saat Ini</th>
+              <th class="num">Stok Minimum</th>
+              <th>Level</th>
+              <th>Status</th>
+            </tr></thead>
+            <tbody id="stok-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</template>
+
+<!-- TEMPLATE: Kapasitas RS -->
+<template id="tpl-kapasitas">
+  <div class="page">
+    <div class="content-grid">
+      <section class="section-card col-span-2">
+        <div class="section-card-head">
+          <h2 class="section-title">Tren Rata-rata BOR Provinsi</h2>
+        </div>
+        <div class="section-card-body chart-wrap" style="height:260px">
+          <canvas id="bor-tren-chart"></canvas>
+        </div>
+      </section>
+      <section class="section-card">
+        <div class="section-card-head">
+          <h2 class="section-title">Ringkasan BOR</h2>
+        </div>
+        <div class="section-card-body">
+          <div id="bor-summary"></div>
+        </div>
+      </section>
+      <section class="section-card col-span-3">
+        <div class="section-card-head">
+          <h2 class="section-title">BOR & Kapasitas ICU per RS</h2>
+        </div>
+        <div class="section-card-body table-wrap">
+          <table class="data-table">
+            <thead><tr>
+              <th>Rumah Sakit</th>
+              <th>Kabupaten</th>
+              <th class="num">Kapasitas</th>
+              <th class="num">Terisi</th>
+              <th>BOR</th>
+              <th class="num">ICU (terisi/total)</th>
+              <th>Status</th>
+            </tr></thead>
+            <tbody id="bor-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</template>
+
+<!-- TEMPLATE: Rujukan -->
+<template id="tpl-rujukan">
+  <div class="page">
+    <div class="content-grid">
+      <section class="section-card col-span-3">
+        <div class="section-card-head">
+          <h2 class="section-title">Monitoring Rujukan Pasien</h2>
+          <span class="section-subtitle">Realtime status transfer antar fasilitas</span>
+        </div>
+        <div class="section-card-body table-wrap">
+          <table class="data-table">
+            <thead><tr>
+              <th>ID Rujukan</th>
+              <th>Pasien</th>
+              <th>Asal</th>
+              <th>Tujuan</th>
+              <th>Diagnosa</th>
+              <th>Transport</th>
+              <th>Status</th>
+              <th>Waktu</th>
+            </tr></thead>
+            <tbody id="rujukan-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</template>
+
+<!-- TEMPLATE: KIA -->
+<template id="tpl-kia">
+  <div class="page">
+    <div class="content-grid">
+      <section class="section-card col-span-3">
+        <div class="section-card-head">
+          <h2 class="section-title">Indikator Kesehatan Ibu &amp; Anak</h2>
+        </div>
+        <div class="section-card-body">
+          <div id="kia-summary" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--space-4)"></div>
+        </div>
+      </section>
+      <section class="section-card col-span-3">
+        <div class="section-card-head">
+          <h2 class="section-title">Progress vs Target</h2>
+        </div>
+        <div class="section-card-body" id="kia-progress">
+          <!-- renderKIAProgress() will fill this -->
+        </div>
+      </section>
+    </div>
+  </div>
+</template>
+
+<!-- TEMPLATE: Imunisasi -->
+<template id="tpl-imunisasi">
+  <div class="page">
+    <div class="content-grid">
+      <section class="section-card">
+        <div class="section-card-head">
+          <h2 class="section-title">Radar Cakupan Imunisasi</h2>
+          <select id="imunisasi-radar-select" class="select-sm"></select>
+        </div>
+        <div class="section-card-body chart-wrap" style="height:260px">
+          <canvas id="imunisasi-radar"></canvas>
+        </div>
+      </section>
+      <section class="section-card col-span-2">
+        <div class="section-card-head">
+          <h2 class="section-title">Cakupan Imunisasi per Kabupaten (%)</h2>
+        </div>
+        <div class="section-card-body table-wrap">
+          <table class="data-table">
+            <thead><tr>
+              <th>Kabupaten</th>
+              <th class="num">BCG</th>
+              <th class="num">Polio</th>
+              <th class="num">DPT</th>
+              <th class="num">Campak</th>
+              <th class="num">HB0</th>
+              <th>Status</th>
+            </tr></thead>
+            <tbody id="imunisasi-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</template>
+
+<!-- TEMPLATE: Gizi -->
+<template id="tpl-gizi">
+  <div class="page">
+    <div class="content-grid">
+      <section class="section-card col-span-2">
+        <div class="section-card-head">
+          <h2 class="section-title">Scatter: Stunting vs Wasting</h2>
+        </div>
+        <div class="section-card-body chart-wrap" style="height:300px">
+          <canvas id="gizi-scatter"></canvas>
+        </div>
+      </section>
+      <section class="section-card">
+        <div class="section-card-head">
+          <h2 class="section-title">Status Gizi per Kabupaten</h2>
+        </div>
+        <div class="section-card-body table-wrap">
+          <table class="data-table">
+            <thead><tr>
+              <th>Kabupaten</th>
+              <th class="num">Stunting%</th>
+              <th class="num">Wasting%</th>
+              <th class="num">Underweight%</th>
+              <th>Status</th>
+            </tr></thead>
+            <tbody id="gizi-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</template>
+
+<!-- TEMPLATE: Nakes -->
+<template id="tpl-nakes">
+  <div class="page">
+    <div class="content-grid">
+      <section class="section-card col-span-2">
+        <div class="section-card-head">
+          <h2 class="section-title">Distribusi Tenaga Kesehatan</h2>
+        </div>
+        <div class="section-card-body chart-wrap" style="height:340px">
+          <canvas id="nakes-chart"></canvas>
+        </div>
+      </section>
+      <section class="section-card">
+        <div class="section-card-head">
+          <h2 class="section-title">Tabel Nakes per Kabupaten</h2>
+        </div>
+        <div class="section-card-body table-wrap">
+          <table class="data-table">
+            <thead><tr>
+              <th>Kabupaten</th>
+              <th class="num">Dokter</th>
+              <th class="num">Perawat</th>
+              <th class="num">Bidan</th>
+              <th class="num">Farmasi</th>
+              <th class="num">Total</th>
+              <th>Status</th>
+            </tr></thead>
+            <tbody id="nakes-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</template>
+
+<!-- TEMPLATE: Laporan -->
+<template id="tpl-laporan">
+  <div class="page">
+    <div class="content-grid">
+      <section class="section-card">
+        <div class="section-card-head">
+          <h2 class="section-title">Status Pelaporan</h2>
+          <span class="section-subtitle" id="laporan-bulan"></span>
+        </div>
+        <div class="section-card-body chart-wrap" style="height:220px">
+          <canvas id="laporan-chart"></canvas>
+        </div>
+      </section>
+      <section class="section-card col-span-2">
+        <div class="section-card-head">
+          <h2 class="section-title">Rincian Pelaporan Kabupaten</h2>
+        </div>
+        <div class="section-card-body table-wrap">
+          <table class="data-table">
+            <thead><tr>
+              <th>Kabupaten</th>
+              <th>Status</th>
+              <th>Tanggal Lapor</th>
+            </tr></thead>
+            <tbody id="laporan-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</template>
+
+<!-- ===================== SCRIPTS ===================== -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/charts.js"></script>
+<script>
+// ============================================================
+// APP SHELL — Router, Sidebar, Topbar, Init
+// ============================================================
+
+const NAV_ITEMS = [
+  { id: 'beranda',   label: 'Beranda',         icon: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>' },
+  { id: 'surveilans',label: 'Surveilans',       icon: '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>' },
+  { id: 'obat',      label: 'Obat & Logistik', icon: '<path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>' },
+  { id: 'kapasitas', label: 'Kapasitas RS',     icon: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/>' },
+  { id: 'rujukan',   label: 'Rujukan',          icon: '<path d="M5 12h14M12 5l7 7-7 7"/>' },
+  { id: 'kia',       label: 'KIA',             icon: '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>' },
+  { id: 'imunisasi', label: 'Imunisasi',        icon: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' },
+  { id: 'gizi',      label: 'Gizi',             icon: '<path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>' },
+  { id: 'nakes',     label: 'Tenaga Kesehatan', icon: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' },
+  { id: 'laporan',   label: 'Laporan',          icon: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>' },
+];
+
+let currentPage = 'beranda';
+
+function svgIcon(paths, size = 18) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+}
+
+function renderSidebar() {
+  const nav = document.getElementById('sidebar-nav');
+  if (!nav) return;
+  nav.innerHTML = NAV_ITEMS.map(item => `
+    <a href="#${item.id}" class="nav-item ${currentPage === item.id ? 'active' : ''}" data-page="${item.id}" aria-current="${currentPage === item.id ? 'page' : 'false'}">
+      ${svgIcon(item.icon)}
+      <span class="nav-label">${item.label}</span>
+    </a>
+  `).join('');
+  nav.querySelectorAll('.nav-item').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      navigateTo(a.dataset.page);
+    });
+  });
+}
+
+function renderTopbar(label) {
+  const bar = document.getElementById('topbar');
+  if (!bar) return;
+  const now = new Date();
+  const tgl = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  const alertCount = DATA.alerts.filter(a => a.level === 'critical').length;
+  bar.innerHTML = `
+    <div class="topbar-left">
+      <button class="topbar-menu-btn" id="topbar-menu" aria-label="Toggle menu">
+        ${svgIcon('<path d="M3 12h18M3 6h18M3 18h18">')}
+      </button>
+      <div>
+        <h1 class="topbar-title">${label}</h1>
+        <span class="topbar-date">${tgl}</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-province">Dinkes Papua</span>
+      ${alertCount > 0 ? `<span class="alert-badge" title="${alertCount} alert kritis">${alertCount}</span>` : ''}
+    </div>`;
+  document.getElementById('topbar-menu')?.addEventListener('click', () => {
+    document.getElementById('sidebar')?.classList.toggle('collapsed');
+  });
+}
+
+// ---- KPI Grid ----
+function renderKPI() {
+  const grid = document.getElementById('kpi-grid');
+  if (!grid) return;
+  const kpis = Object.values(DATA.kpi);
+  const icons = [
+    '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>',
+    '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
+    '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/>',
+    '<path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>',
+  ];
+  grid.innerHTML = kpis.map((k, i) => {
+    const up = k.delta > 0;
+    const arrowColor = up ? 'var(--color-error)' : 'var(--color-success)';
+    const arrowIcon = up
+      ? '<polyline points="18 15 12 9 6 15"/>'
+      : '<polyline points="6 9 12 15 18 9"/>';
+    return `
+      <div class="kpi-card">
+        <div class="kpi-icon">${svgIcon(icons[i], 20)}</div>
+        <div class="kpi-body">
+          <div class="kpi-label">${k.label}</div>
+          <div class="kpi-value" style="font-variant-numeric:tabular-nums">${k.value.toLocaleString('id-ID')} <span class="kpi-unit">${k.unit}</span></div>
+          <div class="kpi-delta" style="color:${arrowColor}">
+            ${svgIcon(arrowIcon, 12)}
+            ${Math.abs(k.delta)}% vs minggu lalu
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ---- Alert List ----
+function renderAlerts() {
+  const list = document.getElementById('alert-list');
+  const badge = document.getElementById('alert-count');
+  if (!list) return;
+  if (badge) badge.textContent = DATA.alerts.length;
+  list.innerHTML = DATA.alerts.map(a => `
+    <div class="alert-item alert-${a.level}">
+      <div class="alert-meta">
+        <span class="alert-kab">${a.kabupaten}</span>
+        <span class="alert-time">${a.waktu}</span>
+      </div>
+      <p class="alert-msg">${a.pesan}</p>
+    </div>
+  `).join('');
+}
+
+// ---- BOR Summary mini ----
+function renderBORSummary() {
+  const wrap = document.getElementById('bor-summary');
+  if (!wrap) return;
+  const total    = DATA.bor.length;
+  const critical = DATA.bor.filter(r => r.status === 'critical').length;
+  const warning  = DATA.bor.filter(r => r.status === 'warning').length;
+  const normal   = DATA.bor.filter(r => r.status === 'normal').length;
+  const avgBOR   = Math.round(DATA.bor.reduce((s, r) => s + r.bor, 0) / total);
+  wrap.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-4)">
+      <div class="mini-stat"><span class="mini-stat-val" style="color:var(--color-error)">${critical}</span><span class="mini-stat-label">RS BOR Kritis (&gt;85%)</span></div>
+      <div class="mini-stat"><span class="mini-stat-val" style="color:var(--color-warning)">${warning}</span><span class="mini-stat-label">RS BOR Waspada</span></div>
+      <div class="mini-stat"><span class="mini-stat-val" style="color:var(--color-success)">${normal}</span><span class="mini-stat-label">RS BOR Normal</span></div>
+      <div class="mini-stat"><span class="mini-stat-val">${avgBOR}%</span><span class="mini-stat-label">Rata-rata BOR Provinsi</span></div>
+    </div>`;
+}
+
+// ---- Laporan meta ----
+function renderLaporanMeta() {
+  const el = document.getElementById('laporan-bulan');
+  if (el) el.textContent = DATA.laporan.bulan;
+}
+
+// ============================================================
+// ROUTER
+// ============================================================
+const PAGE_INIT = {
+  beranda: () => {
+    renderKPI();
+    renderAlerts();
+    renderPeta();
+  },
+  surveilans: () => {
+    renderSurveilansTable();
+    renderTrenFilter();
+    document.getElementById('surveilans-filter')?.querySelectorAll('.pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('surveilans-filter').querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderSurveilansTable(btn.dataset.filter);
+      });
+    });
+  },
+  obat: () => {
+    renderStokObat();
+    document.getElementById('stok-filter')?.querySelectorAll('.pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('stok-filter').querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderStokObat(btn.dataset.filter);
+      });
+    });
+  },
+  kapasitas: () => {
+    renderBORTable();
+    renderBorTrenChart();
+    renderBORSummary();
+  },
+  rujukan:   () => renderRujukan(),
+  kia:       () => { renderKIASummary(); renderKIAProgress(); },
+  imunisasi: () => { renderImunisasiTable(); renderImunisasiRadarDropdown(); },
+  gizi:      () => { renderGiziTable(); renderGiziChart(); },
+  nakes:     () => { renderNakesTable(); renderNakesChart(); },
+  laporan:   () => { renderLaporanChart(); renderLaporanDetail(); renderLaporanMeta(); },
+};
+
+function navigateTo(pageId) {
+  currentPage = pageId;
+  const tpl = document.getElementById(`tpl-${pageId}`);
+  const main = document.getElementById('main-content');
+  if (!tpl || !main) return;
+  main.innerHTML = '';
+  main.appendChild(tpl.content.cloneNode(true));
+  main.scrollTop = 0;
+  const nav = NAV_ITEMS.find(n => n.id === pageId);
+  if (nav) renderTopbar(nav.label);
+  renderSidebar();
+  PAGE_INIT[pageId]?.();
+  history.replaceState(null, '', `#${pageId}`);
+}
+
+// ============================================================
+// THEME TOGGLE
+// ============================================================
+(function(){
+  const r = document.documentElement;
+  let d = matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
+  r.setAttribute('data-theme', d);
+  document.addEventListener('click', e => {
+    if (e.target.closest('[data-theme-toggle]')) {
+      d = d === 'dark' ? 'light' : 'dark';
+      r.setAttribute('data-theme', d);
+    }
+  });
+})();
+
+// ============================================================
+// SIDEBAR TOGGLE
+// ============================================================
+document.getElementById('sidebar-toggle')?.addEventListener('click', () => {
+  document.getElementById('sidebar')?.classList.toggle('collapsed');
+});
+
+// ============================================================
+// INIT
+// ============================================================
+(function init() {
+  renderSidebar();
+  const hash = location.hash.replace('#', '') || 'beranda';
+  const validPage = NAV_ITEMS.find(n => n.id === hash) ? hash : 'beranda';
+  navigateTo(validPage);
+})();
+</script>
+</body>
+</html>
