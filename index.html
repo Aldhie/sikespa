@@ -6,8 +6,10 @@
 <title>SIKESPA — Sistem Informasi Kesehatan Papua</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/components.css">
 </head>
 <body>
 <div class="app-shell">
@@ -17,7 +19,7 @@
     <div class="sidebar-header">
       <a href="#" class="sidebar-logo" aria-label="SIKESPA Home">
         <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-          <rect width="32" height="32" rx="8" fill="var(--color-primary)"/>
+          <rect width="32" height="32" rx="8" fill="var(--primary)"/>
           <path d="M16 7v18M7 16h18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
           <circle cx="16" cy="16" r="5" stroke="white" stroke-width="1.5" fill="none"/>
         </svg>
@@ -179,7 +181,7 @@
       </section>
       <section class="section-card col-span-3">
         <div class="section-card-head">
-          <h2 class="section-title">BOR & Kapasitas ICU per RS</h2>
+          <h2 class="section-title">BOR &amp; Kapasitas ICU per RS</h2>
         </div>
         <div class="section-card-body table-wrap">
           <table class="data-table">
@@ -245,9 +247,7 @@
         <div class="section-card-head">
           <h2 class="section-title">Progress vs Target</h2>
         </div>
-        <div class="section-card-body" id="kia-progress">
-          <!-- renderKIAProgress() will fill this -->
-        </div>
+        <div class="section-card-body" id="kia-progress"></div>
       </section>
     </div>
   </div>
@@ -472,7 +472,7 @@ function renderKPI() {
   ];
   grid.innerHTML = kpis.map((k, i) => {
     const up = k.delta > 0;
-    const arrowColor = up ? 'var(--color-error)' : 'var(--color-success)';
+    const arrowColor = up ? 'var(--danger)' : 'var(--success)';
     const arrowIcon = up
       ? '<polyline points="18 15 12 9 6 15"/>'
       : '<polyline points="6 9 12 15 18 9"/>';
@@ -519,9 +519,9 @@ function renderBORSummary() {
   const avgBOR   = Math.round(DATA.bor.reduce((s, r) => s + r.bor, 0) / total);
   wrap.innerHTML = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-4)">
-      <div class="mini-stat"><span class="mini-stat-val" style="color:var(--color-error)">${critical}</span><span class="mini-stat-label">RS BOR Kritis (&gt;85%)</span></div>
-      <div class="mini-stat"><span class="mini-stat-val" style="color:var(--color-warning)">${warning}</span><span class="mini-stat-label">RS BOR Waspada</span></div>
-      <div class="mini-stat"><span class="mini-stat-val" style="color:var(--color-success)">${normal}</span><span class="mini-stat-label">RS BOR Normal</span></div>
+      <div class="mini-stat"><span class="mini-stat-val" style="color:var(--danger)">${critical}</span><span class="mini-stat-label">RS BOR Kritis (&gt;85%)</span></div>
+      <div class="mini-stat"><span class="mini-stat-val" style="color:var(--warning)">${warning}</span><span class="mini-stat-label">RS BOR Waspada</span></div>
+      <div class="mini-stat"><span class="mini-stat-val" style="color:var(--success)">${normal}</span><span class="mini-stat-label">RS BOR Normal</span></div>
       <div class="mini-stat"><span class="mini-stat-val">${avgBOR}%</span><span class="mini-stat-label">Rata-rata BOR Provinsi</span></div>
     </div>`;
 }
